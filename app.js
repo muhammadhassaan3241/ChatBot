@@ -146,6 +146,7 @@ module.exports = class SocketIOManager {
     })
   }
 }
+AbortController;
 
 require('./controllers/room.controller')
 
