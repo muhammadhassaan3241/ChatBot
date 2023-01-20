@@ -62,26 +62,28 @@
                     <div class="discussions">
                         <h1>Discussions</h1>
                         {{#myRooms}}
-                        <div class="list-group" id="chats-{{roomId}}" role="tablist" onclick="changeChatView({{json messages}},{{myID}});" >
+                        <div class="list-group" id="chats-{{roomId}}" role="tablist"
+                            onclick="changeChatView({{json messages}},{{myID}});">
                             <a href="#list-chat-{{roomId}}" class="filterDiscussions all unread single active"
-                                id="list-chat-list-{{id}}" data-toggle="list" role="tab" onclick="changeChatView({{json messages}},{{myID}});">
-                                <img class="avatar-md" src="dist/img/avatars/avatar-female-1.jpg" data-toggle="tooltip"
-                                    data-placement="top" title="" alt="avatar" data-original-title="Janette">
+                                id="list-chat-list-{{id}}" data-toggle="list" role="tab"
+                                onclick="changeChatView({{json messages}},{{myID}});">
+                                <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top"
+                                    title="" alt="avatar" data-original-title="Janette">
                                 <div class="status">
                                     <i class="material-icons online">fiber_manual_record</i>
                                 </div>
                                 <div class="new bg-yellow">
-                                    <span>+7</span>
+                                    <span>{{messageCount}}</span>
                                 </div>
                                 <div class="data">
-                                    <h5>{{sender}}</h5>
+                                    <h5>{{name}}</h5>
                                     <span>{{day}}</span>
                                     <p>{{message}}</p>
                                 </div>
                             </a>
                         </div>
                         {{/myRooms}}
-                        
+
                     </div>
                 </div>
                 <!-- End of Discussions -->

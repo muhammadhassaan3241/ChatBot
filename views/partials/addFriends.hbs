@@ -11,27 +11,32 @@
                 <form action="/send-request" method="post" id="requestForm">
                     <div id="searchFriends" class="form-group">
                         <label for="user">Username:</label>
-                        <input type="text" class="form-control" id="input" placeholder="Add recipient..."
-                            onkeyup="getUsers()" required>
+                        <input type="text" class="form-control" id="searchBar" placeholder="Search..."
+                            oninput="searchBar()" required>
                     </div>
-                    {{#users}}
+                    {{#friends}}
 
-                    <ul id="nameList" class="list-group">
-                        <li id="list" class="form-control">
-                            <div id="items">
-                                <img id="image" class="avatar-sm" src="{{image}}" alt="avatar">
-                                <h5 id="fullname">{{firstName}} {{lastName}}</h5>
-                            </div>
-                        </li>
-                    </ul>
+                    <div class="list" id="userList">
+                        <div class="list-group" id="allUsers">
+                            <a href="/add-friend/{{id}}" class="list-group-item" style="cursor: pointer;">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" required="">
+                                    <div class="user">
+                                        <img class="avatar-sm" src="{{image}}" alt="avatar">
+                                        <h5>{{name}}</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
 
-                    {{/users}}
-                    <div class="form-group">
+                    {{/friends}}
+                    {{!-- <div class="form-group">
                         <label for="welcome">Message:</label>
                         <textarea class="text-control" id="welcome"
                             placeholder="Send your welcome message...">Hi Keith, I'd like to add you as a contact.</textarea>
                     </div>
-                    <button type="submit" class="btn button w-100">Send Friend Request</button>
+                    <button type="submit" class="btn button w-50">Send Friend Request</button> --}}
                 </form>
             </div>
         </div>

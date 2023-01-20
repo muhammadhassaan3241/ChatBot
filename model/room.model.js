@@ -1,43 +1,48 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
+// ======================================================================== IMPORTING MODULES AND PACKAGES
 
-const roomSchema = new mongoose.Schema({
+
+// MONGOOSE MESSAGE MODEL
+// ===================================== START
+const roomSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING ROOM 
     roomId: {
         type: String,
         required: true,
         unique: true
     },
-    users: {
-        type: mongoose.Schema.Types.ObjectId,
+    users: [{
+        type: Schema.Types.ObjectId,
         ref: 'User'
-    },
+    }],
+    friend: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     messages: [{
-        socket: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-        content: {
-            type: String,
-            required: true,
-        },
-        sent: {
-            type: Boolean,
-            default: false,
-        },
-        received: {
-            type: Boolean,
-            default: false,
-        },
-        seen: {
-            type: Boolean,
-            default: false,
-        },
-    }]
+        type: String,
+        required: true,
+    }],
+    socket: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    sent: {
+        type: Boolean,
+        default: false,
+    },
+    received: {
+        type: Boolean,
+        default: false,
+    },
+    seen: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true,
 });
+// ===================================== STOP
 
 
-module.exports = {
-    Room: mongoose.model('Room', roomSchema)
-}
+export const Room = model('Room', roomSchema);  // ========== EXPORTING MODEL

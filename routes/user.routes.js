@@ -1,8 +1,13 @@
-const { signUp, signIn, signOut } = require("../controllers/user.controller");
-const router = require("express").Router();
+import { Router } from "express";
+import { signUp, signIn, signOut } from "../controllers/user.controller.js";
+const userRoutes = Router();
+// ======================================================================== IMPORTING MODULES AND PACKAGES
 
-router.post("/sign-up", signUp);
-router.post("/sign-in", signIn);
-router.get("/sign-out", signOut)
+// =================================== START
+userRoutes.post("/sign-in", signIn); //========================= SIGN IN
+userRoutes.post("/sign-up", signUp); //========================= SIGN UP
+userRoutes.get("/sign-out", signOut) //========================= SIGN OUT
+// =================================== STOP
 
-module.exports = router;
+
+export default userRoutes; //============================== EXPORTING MODULE

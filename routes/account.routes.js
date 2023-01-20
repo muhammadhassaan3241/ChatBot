@@ -1,20 +1,30 @@
-const { myAccount } = require("../controllers/userAccount.controller");
-const { Token } = require("../middleware/verifyToken");
-const multer = require("multer");
-const mimeTypesFilter = require('@meanie/multer-mime-types-filter');
-const path = require('path');
-const storage = multer.diskStorage({
+import { myAccount } from "../controllers/userAccount.controller.js";
+import { Token } from "../middleware/verifyToken.js";
+import multer, { diskStorage } from "multer";
+import mimeTypesFilter from '@meanie/multer-mime-types-filter';
+import { extname, normalize } from 'path';
+import { Router } from "express";
+const accountRoutes = Router();
+// ======================================================================== IMPORTING MODULES AND PACKAGES
+
+
+// =================================== START
+// MULTER STORAGE
+const storage = diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads/user")
+        cb(null, "uploads/user") //============== FILE LOCATION
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
+        cb(null, Date.now() + extname(normalize(file.originalname))) //============== FILNAME
     }
 })
-const mimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-const upload = multer({ storage: storage, fileFilter: mimeTypesFilter(mimeTypes) });
-const router = require("express").Router();
+const mimeTypes = ['image/jpeg', 'image/png', 'image/gif']; // FILE EXTENSIONS 
+const upload = multer({ storage: storage, fileFilter: mimeTypesFilter(mimeTypes) }); // FILE UPLOAD FILTER
+// ==============================================================================================================
 
-router.post("/my-account", Token, upload.single('image'), myAccount);
 
-module.exports = router;
+accountRoutes.post("/my-account", Token, upload.single('image'), myAccount);
+// =================================== STOP
+
+
+export default accountRoutes;  //============================== EXPORTING MODULE

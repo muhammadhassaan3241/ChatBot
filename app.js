@@ -1,31 +1,27 @@
-const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const cookie = require("cookie-session");
-const session = require("express-session");
-const http = require("http").createServer(app);
-const hbs = require("hbs");
-const MongoStore = require("connect-mongo");
-const flash = require("connect-flash");
-const path = require("path");
-const multer = require("multer");
-const pages = require('./pages/user');
-const user = require('./routes/user.routes');
-const userAccount = require('./routes/account.routes');
-const { Room } = require("./model/room.model");
-const forms = multer();
-const port = process.env.PORT || 8080;
-require("./config/machineId");
-require("dotenv").config();
-require("./database/connection");
-hbs.registerPartials(__dirname + "/views/partials");
-hbs.registerPartials(__dirname + "/views/chat");
-hbs.registerHelper("json", (context) => {
-  return JSON.stringify(context);
-});
-app.set('view engine', 'hbs')
-app.use(
+import express from "express";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import cookieSession from "cookie-session";
+import { fileURLToPath } from "url";
+import session from "express-session";
+import http from "http";
+import hbs from "hbs";
+import MongoStore from "connect-mongo";
+import flash from "connect-flash";
+import multer from "multer";
+import dotenv from "dotenv";
+import path from "path";
+import "./database/connection.js";
+import "./config/machineId.js";
+// ======================================================================== IMPORTING MODULES AND PACKAGES
+
+
+const app = express(); // ASSIGNING VARIABLE AS EXPRESS
+const forms = multer(); // ASSIGNING FORMS AS MULTER
+const port = process.env.PORT || 8080; // ASSIGNING 8080 AS PORT
+dotenv.config(); // USING ENVIROMENTAL VARIABLES
+
+app.use(            // CREATING EXPRESS SESSION
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -36,125 +32,69 @@ app.use(
     cookie: { maxAge: 180 * 60 * 1000 },
   })
 );
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(flash())
-// app.use(express.json());
-app.use(cookieParser());
-app.use(flash());
-app.use(express.static("assets"));
-app.use("/css", express.static(path.resolve(__dirname, "/assets/css")));
-app.use("/js", express.static(path.resolve(__dirname, "/assets/js")));
-app.use("/images", express.static(path.resolve(__dirname, "/assets/img")));
-app.use("/fonts", express.static(path.resolve(__dirname, "/assets/fonts")));
-app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
+
+// PACKAGES
+// =========================================================================================== START
+const accessPath = path.join(process.cwd(), 'assets')
+app.use("/fonts", express.static(path.resolve(accessPath, "/assets/fonts"))); // FONTS
+app.use("/images", express.static(path.resolve(accessPath, "/assets/img"))); //IMAGES
+app.use("/uploads", express.static(path.resolve(accessPath, "uploads"))); // UPLOADS
+app.use("/css", express.static(path.resolve(accessPath, "/assets/css"))); // CSS
+app.use("/js", express.static(path.resolve(accessPath, "/assets/js"))); // JS
+app.use(bodyParser.urlencoded({ extended: false })); // USING BODYPARSER FOR JSON CONTENT TYPE
+app.use(express.static("assets")); // STATIC FILES MAIN ROUTE
+app.use(bodyParser.json()); // USING BODYPARSER FOR JSON CONTENT TYPE
+app.use(cookieParser()); // USING COOKIE PARSER FOR COOKIES
+app.use(flash()) // USING FLASH FOR FLASH MESSAGES
+// =========================================================================================== STOP
+
+// HANDLEBARS HELPERS START
+const viewsPath = path.join(process.cwd(), 'views');
+hbs.registerPartials(path.join(viewsPath, 'partials'));
+hbs.registerPartials(path.join(viewsPath, 'chat'));
 
 hbs.registerHelper("json", (context) => {
   return JSON.stringify(context);
 });
+// HANDLEBARS HELPERS END
 
-app.use('/', userAccount);
-app.use('/', pages);
-app.use('/', user);
+app.set('view engine', 'hbs') // SETTING TEMPLATING ENGINE
 
-
-const io = require("socket.io")(http);
-
-module.exports = class SocketIOManager {
-
-  static getInstance() {
-    if (!SocketIOManager.instance) {
-      SocketIOManager.instance = new SocketIOManager();
-    }
-    return SocketIOManager.instance;
-  }
-
-  constructor() {
-    this.logs = [];
-  }
-
-  start() {
-    io.on("connection", (socket) => {
-      console.log('Socket Connected');
-    });
-
-  }
-  getCount() {
-    return this.log.length;
-  }
-
-  log(message) {
-    console.log(message);
-  }
-
-  userConnection(user) {
-    io.on("connection", (socket) => {
-      console.log(`${user} connected`);
-      // return socket.id
-    })
-  }
-
-  userJoin(presentRoom) {
-    if (this.userConnected(user)) {
-      this.userConnected(user)
-      socket.join(presentRoom)
-    }
-  }
-
-  dataTransfer(nameSpace, data) {
-    io.on('connection', (socket) => {
-      socket.emit(nameSpace, data)
-    })
-  }
-
-  dataTransferToSpecficRoom(nameSpace, room, data) {
-    socket.to(room).emit(nameSpace, data)
-  }
-
-  dataListen(nameSpace) {
-    io.on('connection', (socket) => {
-      socket.on(nameSpace, (data) => {
-        console.log(data);
-      })
-    })
-  }
-
-  createNewRoom(newRoom) {
-    io.on('connection', (socket) => {
-      socket.join(newRoom)
-    })
-  }
-
-  privateMessage(nameSpace) {
-    io.on('connection', (socket) => {
-      socket.on(nameSpace, async (socket, data) => {
-        const roomId = this.createNewRoom('room1')
-        const room = await Room.create({
-          roomId: roomId,
-          // users: data.id,
-          messages: [{
-            content: data.text,
-            sent: true,
-          }],
-        }).then((data) => {
-          console.log(data);
-        }).catch((err) => {
-          console.log(err);
-        })
-        socket.broadcast.emit(nameSpace, room)
-      })
-    })
-  }
-}
-AbortController;
-
-require('./controllers/room.controller')
+// SERVER
+import { Server as SocketServer } from "socket.io";
+const server = http.createServer(app);
+//const io = new SocketServer(server);
+// io.on('connection', (socket) => {
+//   console.log("socket connected");
+// })
 
 
-http.listen(port, () => {
+SocketIOManager.getInstance().start(server, () => {
+  console.log('callback function');
+});
+
+// MODULES
+// =========================================================================================== START
+import "./controllers/addFriends.controller.js"
+import "./controllers/room.controller.js"
+import accountRoutes from "./routes/account.routes.js";
+import userRoutes from "./routes/user.routes.js"
+import pagesRoutes from "./pages/pages.js"
+import { SocketIOManager } from "./assets/js/SocketIOManager.js";
+app.use('/', accountRoutes);
+app.use('/', pagesRoutes);
+app.use('/', userRoutes);
+// =========================================================================================== STOP
+
+
+// export * from SocketIOManager;
+
+// starting server
+server.listen(port, () => {
   console.log("Server listening on port " + port);
 });
 
 // ====================================================================
 
 
+export default app;

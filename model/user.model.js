@@ -1,6 +1,9 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
+// ======================================================================== IMPORTING MODULES AND PACKAGES
 
-const userSchema = new mongoose.Schema({
+// MONGOOSE USER MODEL
+// ===================================== START
+const userSchema = new Schema({    // =========== CREATING SCHEMA FOR USER  
   firstName: {
     type: String,
   },
@@ -29,7 +32,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 });
+// ===================================== STOP
 
-module.exports = {
-  User: mongoose.model("User", userSchema),
-};
+
+export const User = model("User", userSchema);   // ========== EXPORTING MODEL

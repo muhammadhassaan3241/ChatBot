@@ -1,13 +1,20 @@
-const socket = io(); // Always place socket on top otherwise it won't initialize
+import { SocketIOManager } from "./SocketIOManager.js";
 
+// const socket = io(); // Always place socket on top otherwise it won't initialize
+console.log('1111111');
+console.log('222222');
+SocketIOManager.getInstance().start(() => {
+  console.log('Connected to socket');
+})
+console.log("3333")
 socket.on("connect", () => {
-  console.log(socket.id);
+  console.log('message client side');
 });
 
+// import SocketIOManager from "../../app";
 function socketEmitter(nameSpace, data) {
   //event emitter function
   socket.emit(nameSpace, data);
-  // console.log(data)
 }
 
 // ---Form Start--- \\
@@ -18,11 +25,11 @@ const userId = $("#user-id"); // user id
 
 form.submit(async (e) => {
   e.preventDefault(); // prevent form from submit
-
   let data = {
     text: textarea.val(),
     id: userId.val(),
     socket: socket.id,
+    room: Math.floor(Math.random() * 10000) + Date.now(),
   };
 
   if (textarea.val() !== "") {
@@ -114,13 +121,50 @@ function changeChatView(messages, myID) {
   document.getElementById("chatbox").innerHTML = html;
 }
 
-// `<div class="message me">
-// <div class="text-main">
-// <div class="text-group me">
-// <div class="text me">
-// <p>${data.text}</p>
-// </div>
-// </div>
-// <span></span>
-// </div>
-// </div>`;
+
+// =============================================================================================
+// =============================================================================================
+// =============================================================================================
+// =============================================================================================
+
+
+// NOTIFICATION SETTINGS
+
+// Soc.on('connect', () => {
+//   console.log("notication client side");
+// })
+
+const form1 = $("#addFriendForm"); // form
+const sender = $('#sender'); // you
+const senderName = $('#senderName'); // your name
+const senderImage = $('#senderImage'); // your image
+const reciever = $('#reciever'); // friend
+const receiverName = $('#receiverName'); // friend name
+const receiverImage = $('#receiverImage'); // friend image  
+const sendButton = $('#sendRequest'); // send button
+
+form1.submit(async (e) => {
+  e.preventDefault();
+  let request = {
+    sender: sender.val(),
+    senderName: senderName.val(),
+    senderImage: senderImage.val(),
+    reciever: reciever.val(),
+    receiverName: receiverName.val(),
+    receiverImage: receiverImage.val(),
+    message: `Your request to ${receiverName.val()} has been sent `,
+    time: Date.now()
+  }
+  console.log(request);
+
+  sendButton.click(() => {
+
+    // socket.emit('sentNotification', request)
+    SocketIOManager.getInstance().dataTransfer('sentNotification', request)
+
+    alert('Your request has been sent')
+
+  })
+
+})
+
