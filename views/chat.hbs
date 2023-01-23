@@ -4,20 +4,792 @@
     <main>
         <div class="layout">
             <!-- Start of Navigation -->
-            {{> navigation}}
+            <div class="navigation">
+                <div class="container">
+                    <div class="inside">
+                        <div class="nav nav-tab menu">
+                            <button class="btn"><img class="avatar-xl" src="dist/img/avatars/avatar-male-1.jpg"
+                                    alt="avatar"></button>
+                            <a href="#members" data-toggle="tab"><i class="material-icons">account_circle</i></a>
+                            <a href="#discussions" data-toggle="tab" class="active"><i
+                                    class="material-icons active">chat_bubble_outline</i></a>
+                            <a href="#notifications" data-toggle="tab" class="f-grow1"><i
+                                    class="material-icons">notifications_none</i></a>
+                            <button class="btn mode"><i class="material-icons">brightness_2</i></button>
+                            <a href="#settings" data-toggle="tab"><i class="material-icons">settings</i></a>
+                            <button class="btn power" onclick="visitPage();"><i
+                                    class="material-icons">power_settings_new</i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- End of Navigation -->
             <!-- Start of Sidebar -->
-            {{> sidebar}}
+            <div class="sidebar" id="sidebar">
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="tab-content">
+                            <!-- Start of Contacts -->
+                            <div class="tab-pane fade" id="members">
+                                <div class="search">
+                                    <form class="form-inline position-relative">
+                                        <input type="search" class="form-control" id="people"
+                                            placeholder="Search for people...">
+                                        <button type="button" class="btn btn-link loop"><i
+                                                class="material-icons">search</i></button>
+                                    </form>
+                                    <button class="btn create" data-toggle="modal" data-target="#exampleModalCenter"><i
+                                            class="material-icons">person_add</i></button>
+                                </div>
+                                <div class="list-group sort">
+                                    <button class="btn filterMembersBtn active show" data-toggle="list"
+                                        data-filter="all">All</button>
+                                    <button class="btn filterMembersBtn" data-toggle="list"
+                                        data-filter="online">Online</button>
+                                    <button class="btn filterMembersBtn" data-toggle="list"
+                                        data-filter="offline">Offline</button>
+                                </div>
+                                <div class="contacts">
+                                    <h1>Contacts</h1>
+                                    <div class="list-group" id="contacts" role="tablist">
+                                        <a href="#" class="filterMembers all online contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-1.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Janette Dalton</h5>
+                                                <p>Sofia, Bulgaria</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all online contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-1.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Michael" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Michael Knudsen</h5>
+                                                <p>Washington, USA</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all online contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-2.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Lean" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Lean Avent</h5>
+                                                <p>Shanghai, China</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all online contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-2.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Mariette"
+                                                alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Mariette Toles</h5>
+                                                <p>Helena, Montana</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all online contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-3.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Harmony" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Harmony Otero</h5>
+                                                <p>Indore, India</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all offline contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-5.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Keith Morris</h5>
+                                                <p>Chisinau, Moldova</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all offline contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-6.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Louis" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Louis Martinez</h5>
+                                                <p>Vienna, Austria</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all offline contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-3.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Ryan" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Ryan Foster</h5>
+                                                <p>Oslo, Norway</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterMembers all offline contact" data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-4.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Mildred" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5>Mildred Bennett</h5>
+                                                <p>London, United Kingdom</p>
+                                            </div>
+                                            <div class="person-add">
+                                                <i class="material-icons">person</i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of Contacts -->
+                            <!-- Start of Discussions -->
+                            <div id="discussions" class="tab-pane fade active show">
+                                <div class="search">
+                                    <form class="form-inline position-relative">
+                                        <input type="search" class="form-control" id="conversations"
+                                            placeholder="Search for conversations...">
+                                        <button type="button" class="btn btn-link loop"><i
+                                                class="material-icons">search</i></button>
+                                    </form>
+                                    <button class="btn create" data-toggle="modal" data-target="#startnewchat"><i
+                                            class="material-icons">create</i></button>
+                                </div>
+                                <div class="list-group sort">
+                                    <button class="btn filterDiscussionsBtn active show" data-toggle="list"
+                                        data-filter="all">All</button>
+                                    <button class="btn filterDiscussionsBtn" data-toggle="list"
+                                        data-filter="read">Read</button>
+                                    <button class="btn filterDiscussionsBtn" data-toggle="list"
+                                        data-filter="unread">Unread</button>
+                                </div>
+                                <div class="discussions">
+                                    <h1>Discussions</h1>
+                                    {{> discussions}}
+                                </div>
+                            </div>
+                            <!-- End of Discussions -->
+                            <!-- Start of Notifications -->
+                            <div id="notifications" class="tab-pane fade">
+                                <div class="search">
+                                    <form class="form-inline position-relative">
+                                        <input type="search" class="form-control" id="notice"
+                                            placeholder="Filter notifications...">
+                                        <button type="button" class="btn btn-link loop"><i
+                                                class="material-icons filter-list">filter_list</i></button>
+                                    </form>
+                                </div>
+                                <div class="list-group sort">
+                                    <button class="btn filterNotificationsBtn active show" data-toggle="list"
+                                        data-filter="all">All</button>
+                                    <button class="btn filterNotificationsBtn" data-toggle="list"
+                                        data-filter="latest">Latest</button>
+                                    <button class="btn filterNotificationsBtn" data-toggle="list"
+                                        data-filter="oldest">Oldest</button>
+                                </div>
+                                <div class="notifications">
+                                    <h1>Notifications</h1>
+                                    <div class="list-group" id="alerts" role="tablist">
+                                        <a href="#" class="filterNotifications all latest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-1.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Janette has accepted your friend request on Swipe.</p>
+                                                <span>Oct 17, 2018</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all latest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-1.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Michael" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Michael, you have a new friend suggestion today.</p>
+                                                <span>Jun 21, 2018</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all latest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-2.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Mariette"
+                                                alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Mariette have just sent you a new message.</p>
+                                                <span>Feb 15, 2018</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all latest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-6.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Louis" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Louis has a birthday today. Wish her all the best.</p>
+                                                <span>Mar 23, 2018</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all latest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-3.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Harmony has accepted your friend request on Swipe.</p>
+                                                <span>Jan 5, 2018</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all oldest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-5.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Keith have just sent you a new message.</p>
+                                                <span>Dec 22, 2017</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all oldest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-female-2.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Michael, you have a new friend suggestion today.</p>
+                                                <span>Nov 29, 2017</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all oldest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-3.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Ryan have just sent you a new message.</p>
+                                                <span>Sep 31, 2017</span>
+                                            </div>
+                                        </a>
+                                        <a href="#" class="filterNotifications all oldest notification"
+                                            data-toggle="list">
+                                            <img class="avatar-md" src="dist/img/avatars/avatar-male-4.jpg"
+                                                data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <p>Mildred has a birthday today. Wish him all the best.</p>
+                                                <span>Jul 19, 2017</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of Notifications -->
+                            <!-- Start of Settings -->
+                            <div class="tab-pane fade" id="settings">
+                                <div class="settings">
+                                    <div class="profile">
+                                        <img class="avatar-xl" src="dist/img/avatars/avatar-male-1.jpg" alt="avatar">
+                                        <h1><a href="#">Michael Knudsen</a></h1>
+                                        <span>Helena, Montana</span>
+                                        <div class="stats">
+                                            <div class="item">
+                                                <h2>122</h2>
+                                                <h3>Fellas</h3>
+                                            </div>
+                                            <div class="item">
+                                                <h2>305</h2>
+                                                <h3>Chats</h3>
+                                            </div>
+                                            <div class="item">
+                                                <h2>1538</h2>
+                                                <h3>Posts</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="categories" id="accordionSettings">
+                                        <h1>Settings</h1>
+                                        <!-- Start of My Account -->
+                                        {{> myAccount}}
+                                        <!-- End of My Account -->
+                                        <!-- Start of Chat History -->
+                                        {{> chatHistory}}
+                                        <!-- End of Chat History -->
+                                        <!-- Start of Notifications Settings -->
+                                        {{> notificationSettings}}
+                                        <!-- End of Notifications Settings -->
+                                        <!-- Start of Connections -->
+                                        {{> connections}}
+                                        <!-- End of Connections -->
+                                        <!-- Start of Appearance Settings -->
+                                        {{> appearanceSettings}}
+                                        <!-- End of Appearance Settings -->
+                                        <!-- Start of Language -->
+                                        {{> languageSettings}}
+                                        <!-- End of Language -->
+                                        <!-- Start of Privacy & Safety -->
+                                        {{> privacyAndSecurity}}
+                                        <!-- End of Privacy & Safety -->
+                                        <!-- Start of Logout -->
+                                        {{> logout}}
+                                        <!-- End of Logout -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of Settings -->
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- End of Sidebar -->
             <!-- Start of Add Friends -->
-            {{> addFriends}}
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="requests">
+                        <div class="title">
+                            <h1>Add your friends</h1>
+                            <button type="button" class="btn" data-dismiss="modal" aria-label="Close"><i
+                                    class="material-icons">close</i></button>
+                        </div>
+                        <div class="content">
+                            <form>
+                                <div class="form-group">
+                                    <label for="user">Username:</label>
+                                    <input type="text" class="form-control" id="user" placeholder="Add recipient..."
+                                        required>
+                                    <div class="user" id="contact">
+                                        <img class="avatar-sm" src="dist/img/avatars/avatar-female-5.jpg" alt="avatar">
+                                        <h5>Keith Morris</h5>
+                                        <button class="btn"><i class="material-icons">close</i></button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="welcome">Message:</label>
+                                    <textarea class="text-control" id="welcome"
+                                        placeholder="Send your welcome message...">Hi Keith, I'd like to add you as a contact.</textarea>
+                                </div>
+                                <button type="submit" class="btn button w-100">Send Friend Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- End of Add Friends -->
             <!-- Start of Create Chat -->
-            {{> startNewChat}}
+            <div class="modal fade" id="startnewchat" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="requests">
+                        <div class="title">
+                            <h1>Start new chat</h1>
+                            <button type="button" class="btn" data-dismiss="modal" aria-label="Close"><i
+                                    class="material-icons">close</i></button>
+                        </div>
+                        <div class="content">
+                            <form>
+                                <div class="form-group">
+                                    <label for="participant">Recipient:</label>
+                                    <input type="text" class="form-control" id="participant"
+                                        placeholder="Add recipient..." required>
+                                    <div class="user" id="recipient">
+                                        <img class="avatar-sm" src="dist/img/avatars/avatar-female-5.jpg" alt="avatar">
+                                        <h5>Keith Morris</h5>
+                                        <button class="btn"><i class="material-icons">close</i></button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="topic">Topic:</label>
+                                    <input type="text" class="form-control" id="topic" placeholder="What's the topic?"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Message:</label>
+                                    <textarea class="text-control" id="message"
+                                        placeholder="Send your welcome message...">Hmm, are you friendly?</textarea>
+                                </div>
+                                <button type="submit" class="btn button w-100">Start New Chat</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- End of Create Chat -->
-            {{!-- Start of Main --}}
-            {{> main}}
-            {{!-- End of Main --}}
+            <div class="main">
+                <div class="tab-content" id="nav-tabContent">
+                    <!-- Start of Babble -->
+                    <div class="babble tab-pane fade active show" id="list-chat" role="tabpanel"
+                        aria-labelledby="list-chat-list">
+                        <!-- Start of Chat -->
+                        <div class="chat" id="chat1">
+                            <div class="top">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="inside">
+                                            <a href="#"><img class="avatar-md"
+                                                    src="dist/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
+                                                    data-placement="top" title="Keith" alt="avatar"></a>
+                                            <div class="status">
+                                                <i class="material-icons online">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5><a href="#">Keith Morris</a></h5>
+                                                <span>Active now</span>
+                                            </div>
+                                            <button class="btn connect d-md-block d-none" name="1"><i
+                                                    class="material-icons md-30">phone_in_talk</i></button>
+                                            <button class="btn connect d-md-block d-none" name="1"><i
+                                                    class="material-icons md-36">videocam</i></button>
+                                            <button class="btn d-md-block d-none"><i
+                                                    class="material-icons md-30">info</i></button>
+                                            <div class="dropdown">
+                                                <button class="btn" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false"><i
+                                                        class="material-icons md-30">more_vert</i></button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button class="dropdown-item connect" name="1"><i
+                                                            class="material-icons">phone_in_talk</i>Voice Call</button>
+                                                    <button class="dropdown-item connect" name="1"><i
+                                                            class="material-icons">videocam</i>Video Call</button>
+                                                    <hr>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">clear</i>Clear History</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">block</i>Block Contact</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">delete</i>Delete Contact</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="content" id="content">
+                                <div class="container">
+                                    {{> privateChat}}
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="col-md-12">
+                                    <div class="bottom">
+                                        {{#user}}
+                                        <form id="chatForm" class="position-relative w-100">
+                                            <textarea type="text" name="message" class="form-control"
+                                                placeholder="Start typing for reply..." rows="1" id="chat"></textarea>
+
+                                            <input type="text" id="user-id" value="{{id}}" name="user" hidden />
+                                            <input type="text" id="user-fullname" value="{{firstName}} {{lastName}}"
+                                                name="" hidden />
+
+                                            <button class="btn emoticons"><i
+                                                    class="material-icons">insert_emoticon</i></button>
+                                            <button type="submit" class="btn send"><i
+                                                    class="material-icons">send</i></button>
+                                        </form>
+                                        {{/user}}
+                                        <lael>
+                                            <input type="file">
+                                            <span class="btn attach d-sm-block d-none"><i
+                                                    class="material-icons">attach_file</i></span>
+                                            </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Chat -->
+                        <!-- Start of Call -->
+                        <div class="call" id="call1">
+                            <div class="content">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="inside">
+                                            <div class="panel">
+                                                <div class="participant">
+                                                    <img class="avatar-xxl" src="dist/img/avatars/avatar-female-5.jpg"
+                                                        alt="avatar">
+                                                    <span>Connecting</span>
+                                                </div>
+                                                <div class="options">
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">mic</i></button>
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">videocam</i></button>
+                                                    <button class="btn option call-end"><i
+                                                            class="material-icons md-30">call_end</i></button>
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">person_add</i></button>
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">volume_up</i></button>
+                                                </div>
+                                                <button class="btn back" name="1"><i
+                                                        class="material-icons md-24">chat</i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Call -->
+                    </div>
+                    <!-- End of Babble -->
+                    <!-- Start of Babble -->
+                    <div class="babble tab-pane fade" id="list-empty" role="tabpanel" aria-labelledby="list-empty-list">
+                        <!-- Start of Chat -->
+                        <div class="chat" id="chat2">
+                            <div class="top">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="inside">
+                                            <a href="#"><img class="avatar-md"
+                                                    src="dist/img/avatars/avatar-female-2.jpg" data-toggle="tooltip"
+                                                    data-placement="top" title="Lean" alt="avatar"></a>
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5><a href="#">Lean Avent</a></h5>
+                                                <span>Inactive</span>
+                                            </div>
+                                            <button class="btn connect d-md-block d-none" name="2"><i
+                                                    class="material-icons md-30">phone_in_talk</i></button>
+                                            <button class="btn connect d-md-block d-none" name="2"><i
+                                                    class="material-icons md-36">videocam</i></button>
+                                            <button class="btn d-md-block d-none"><i
+                                                    class="material-icons md-30">info</i></button>
+                                            <div class="dropdown">
+                                                <button class="btn" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false"><i
+                                                        class="material-icons md-30">more_vert</i></button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button class="dropdown-item connect" name="2"><i
+                                                            class="material-icons">phone_in_talk</i>Voice Call</button>
+                                                    <button class="dropdown-item connect" name="2"><i
+                                                            class="material-icons">videocam</i>Video Call</button>
+                                                    <hr>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">clear</i>Clear History</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">block</i>Block Contact</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">delete</i>Delete Contact</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="content empty">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="no-messages">
+                                            <i class="material-icons md-48">forum</i>
+                                            <p>Seems people are shy to start the chat. Break the ice send the first
+                                                message.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="col-md-12">
+                                    <div class="bottom">
+                                        <form class="position-relative w-100">
+                                            <textarea class="form-control" placeholder="Start typing for reply..."
+                                                rows="1"></textarea>
+                                            <button class="btn emoticons"><i
+                                                    class="material-icons">insert_emoticon</i></button>
+                                            <button type="submit" class="btn send"><i
+                                                    class="material-icons">send</i></button>
+                                        </form>
+                                        <label>
+                                            <input type="file">
+                                            <span class="btn attach d-sm-block d-none"><i
+                                                    class="material-icons">attach_file</i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Chat -->
+                        <!-- Start of Call -->
+                        <div class="call" id="call2">
+                            <div class="content">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="inside">
+                                            <div class="panel">
+                                                <div class="participant">
+                                                    <img class="avatar-xxl" src="dist/img/avatars/avatar-female-2.jpg"
+                                                        alt="avatar">
+                                                    <span>Connecting</span>
+                                                </div>
+                                                <div class="options">
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">mic</i></button>
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">videocam</i></button>
+                                                    <button class="btn option call-end"><i
+                                                            class="material-icons md-30">call_end</i></button>
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">person_add</i></button>
+                                                    <button class="btn option"><i
+                                                            class="material-icons md-30">volume_up</i></button>
+                                                </div>
+                                                <button class="btn back" name="2"><i
+                                                        class="material-icons md-24">chat</i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Call -->
+                    </div>
+                    <!-- End of Babble -->
+                    <!-- Start of Babble -->
+                    <div class="babble tab-pane fade" id="list-request" role="tabpanel"
+                        aria-labelledby="list-request-list">
+                        <!-- Start of Chat -->
+                        <div class="chat" id="chat3">
+                            <div class="top">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="inside">
+                                            <a href="#"><img class="avatar-md"
+                                                    src="dist/img/avatars/avatar-female-6.jpg" data-toggle="tooltip"
+                                                    data-placement="top" title="Louis" alt="avatar"></a>
+                                            <div class="status">
+                                                <i class="material-icons offline">fiber_manual_record</i>
+                                            </div>
+                                            <div class="data">
+                                                <h5><a href="#">Louis Martinez</a></h5>
+                                                <span>Inactive</span>
+                                            </div>
+                                            <button class="btn disabled d-md-block d-none" disabled><i
+                                                    class="material-icons md-30">phone_in_talk</i></button>
+                                            <button class="btn disabled d-md-block d-none" disabled><i
+                                                    class="material-icons md-36">videocam</i></button>
+                                            <button class="btn d-md-block disabled d-none" disabled><i
+                                                    class="material-icons md-30">info</i></button>
+                                            <div class="dropdown">
+                                                <button class="btn disabled" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false" disabled><i
+                                                        class="material-icons md-30">more_vert</i></button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">phone_in_talk</i>Voice Call</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">videocam</i>Video Call</button>
+                                                    <hr>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">clear</i>Clear History</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">block</i>Block Contact</button>
+                                                    <button class="dropdown-item"><i
+                                                            class="material-icons">delete</i>Delete Contact</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="content empty">
+                                <div class="container">
+                                    <div class="col-md-12">
+                                        <div class="no-messages request">
+                                            <a href="#"><img class="avatar-xl"
+                                                    src="dist/img/avatars/avatar-female-6.jpg" data-toggle="tooltip"
+                                                    data-placement="top" title="Louis" alt="avatar"></a>
+                                            <h5>Louis Martinez would like to add you as a contact. <span>Hi Keith, I'd
+                                                    like to add you as a contact.</span></h5>
+                                            <div class="options">
+                                                <button class="btn button"><i class="material-icons">check</i></button>
+                                                <button class="btn button"><i class="material-icons">close</i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="col-md-12">
+                                    <div class="bottom">
+                                        <form class="position-relative w-100">
+                                            <textarea class="form-control" placeholder="Messaging unavailable" rows="1"
+                                                disabled></textarea>
+                                            <button class="btn emoticons disabled" disabled><i
+                                                    class="material-icons">insert_emoticon</i></button>
+                                            <button class="btn send disabled" disabled><i
+                                                    class="material-icons">send</i></button>
+                                        </form>
+                                        <label>
+                                            <input type="file" disabled>
+                                            <span class="btn attach disabled d-sm-block d-none"><i
+                                                    class="material-icons">attach_file</i></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Chat -->
+                    </div>
+                    <!-- End of Babble -->
+                </div>
+            </div>
         </div> <!-- Layout -->
     </main>
     <!-- Bootstrap/Swipe core JavaScript

@@ -2,7 +2,10 @@ import flash from "connect-flash";
 import { Router } from "express";
 import { Token } from "../middleware/verifyToken.js";
 import { User } from "../model/user.model.js";
-import { Room } from "../model/room.model.js"
+import { Notification } from "../model/notification.model.js"
+import { date, formatAMPM, saveTheday } from "../config/time.js";
+import { Message } from "../model/message.model.js";
+import path from "path";
 const pagesRoutes = Router();
 // ================================================== IMPORTS MODULES AND PACKAGES
 
@@ -18,34 +21,54 @@ pagesRoutes.get("/", (req, res) => {
 });
 // ============================================================================================== SIGN IN
 pagesRoutes.get("/chat", Token, async (req, res) => {
-  const userId = req.user.id;
-  const user = await User.findById(userId);
-  const users = await User.find();
-  const rooms = await Room.find({ users: userId })
-    .populate("users")
   const friends = [];
   const discussions = [];
-  rooms.filter((r) => {
+  const notifications = [];
+  const userId = req.user.id;
+  const users = await User.find();
+  const user = await User.findById(userId);
+  const notification = await Notification.find({ friend: userId }).populate('users');
+  const message = await Message.find({ friend: userId }).populate('users')
+  message.filter((r) => {
     discussions.push({
-      name: `${r.users.firstName} ${r.users.lastName}`,
-      messages: r.messages.find((m) => { return m.content }),
+      roomId: r.roomId,
+      sender: r.friend.map((u) => { return `${u.firstName} ${u.lastName}` }),
+      senderImage: r.friend.map((u) => { return u.image }),
+      messages: r.messages,
+      time: formatAMPM(r.createdAt),
+      day: saveTheday(r.createdAt),
+      date: date(r.createdAt)
     })
-  });
+  })
+
   users.filter((u) => {
     friends.push({
       id: u.id,
       name: `${u.firstName} ${u.lastName}`,
       image: u.image,
     })
+  });
+
+  notification.filter((n) => {
+    notifications.push({
+      sender: n.users.map((nu) => { return `${nu.firstName} ${nu.lastName}` }),
+      senderImage: n.friendRequest.map((ni) => { return ni.senderImage }),
+      message: n.users.map((nu) => { return `${nu.firstName} ${nu.lastName} sent you a friend request` }),
+      time: formatAMPM(n.createdAt),
+      day: saveTheday(n.createdAt),
+      date: date(n.createdAt),
+    })
   })
-  console.log(JSON.stringify(rooms));
+
+  console.log({ discussions });
   res.render("chat", {
     title: "ChatIO",
     user: user,
     users: users,
     friends: friends,
-    myRooms: rooms,
+    discussions: discussions,
     myID: userId,
+    notifications: notifications,
   });
 });
 // ============================================================================================== CHAT
@@ -61,7 +84,11 @@ pagesRoutes.get('/add-friend/:id', Token, async (req, res) => {
     receiverName: receiver.firstName,
     receiverImage: receiver.image,
     senderImage: sender.image,
+    receiverEmail: receiver.email,
+    senderEmail: sender.email,
   }];
+
+  // console.log(friend);
   res.render('friendProfile', { title: "Profile", friend: friend });
 
 })

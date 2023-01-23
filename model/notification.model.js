@@ -1,15 +1,14 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, mongo } from 'mongoose';
 // ======================================================================== IMPORTING MODULES AND PACKAGES
 
 
 // MONGOOSE MESSAGE MODEL
 // ===================================== START
-const roomSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING ROOM 
-    roomId: {
+const notifcationSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING ROOM 
+    roomId: [{
         type: String,
         required: true,
-        unique: true
-    },
+    }],
     users: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -20,12 +19,16 @@ const roomSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING
     }],
     messages: [{
         type: String,
-        required: true,
+        ref: "Message"
+    }],
+    notifications: [{
+        type: Schema.Types.Mixed,
+    }],
+    friendRequest: [{
+        type: Schema.Types.Mixed,
     }],
     socket: {
         type: String,
-        required: true,
-        unique: true,
     },
     sent: {
         type: Boolean,
@@ -45,4 +48,4 @@ const roomSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING
 // ===================================== STOP
 
 
-export const Room = model('Room', roomSchema);  // ========== EXPORTING MODEL
+export const Notification = model('Room', notifcationSchema);  // ========== EXPORTING MODEL

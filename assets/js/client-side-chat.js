@@ -1,12 +1,6 @@
-import { SocketIOManager } from "./SocketIOManager.js";
 
-// const socket = io(); // Always place socket on top otherwise it won't initialize
-console.log('1111111');
-console.log('222222');
-SocketIOManager.getInstance().start(() => {
-  console.log('Connected to socket');
-})
-console.log("3333")
+const socket = io(); // Always place socket on top otherwise it won't initialize
+
 socket.on("connect", () => {
   console.log('message client side');
 });
@@ -85,9 +79,8 @@ socket.on("privateMessage", async (data) => {
   });
 });
 
-function changeChatView(messages, myID) {
+function changeChatView(messages, myID, time) {
   var messagess = messages;
-  console.log(messagess);
   html = "";
 
   messagess.map((msg) => {
@@ -97,10 +90,10 @@ function changeChatView(messages, myID) {
       <div class="text-main">
       <div class="text-group me">
       <div class="text me">
-      <p>${msg.content}</p>
+      <p>${msg}</p>
       </div>
       </div>
-      <span>${msg.createdAt}</span>
+      <span>${time}</span>
       </div>
       </div>`;
     } else {
@@ -136,11 +129,14 @@ function changeChatView(messages, myID) {
 
 const form1 = $("#addFriendForm"); // form
 const sender = $('#sender'); // you
+const fullname = $('#name');
 const senderName = $('#senderName'); // your name
 const senderImage = $('#senderImage'); // your image
-const reciever = $('#reciever'); // friend
+const senderEmail = $('#senderEmail') // your email
+const receiver = $('#receiver'); // friend
 const receiverName = $('#receiverName'); // friend name
 const receiverImage = $('#receiverImage'); // friend image  
+const receiverEmail = $('#receiverEmail') // friend email
 const sendButton = $('#sendRequest'); // send button
 
 form1.submit(async (e) => {
@@ -149,21 +145,22 @@ form1.submit(async (e) => {
     sender: sender.val(),
     senderName: senderName.val(),
     senderImage: senderImage.val(),
-    reciever: reciever.val(),
+    receiver: receiver.val(),
     receiverName: receiverName.val(),
     receiverImage: receiverImage.val(),
-    message: `Your request to ${receiverName.val()} has been sent `,
-    time: Date.now()
+    senderEmail: senderEmail.val(),
+    receiverEmail: receiverEmail.val(),
+    message: `${senderName.val()} sent you a friend request`,
+    time: Date.now(),
+    room: Math.floor(Math.random() * 10000) + Date.now(),
+
   }
   console.log(request);
 
-  sendButton.click(() => {
-
-    // socket.emit('sentNotification', request)
-    SocketIOManager.getInstance().dataTransfer('sentNotification', request)
-
+  sendButton.click(function () {
+    socket.emit('sentNotification', request)
     alert('Your request has been sent')
-
+    return false;
   })
 
 })

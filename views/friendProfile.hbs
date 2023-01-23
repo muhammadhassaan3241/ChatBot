@@ -439,13 +439,15 @@
                             </div>
                             <form id="addFriendForm">
                                 <div class="name">
-                                    <h3 class="title">{{name}}</h3>
-                                    <input value="{{receiver}}" id="reciever" hidden>
+                                    <h3 class="title" id="name">{{name}}</h3>
+                                    <input value="{{receiver}}" id="receiver" hidden>
                                     <input value="{{sender}}" id="sender" hidden>
                                     <input value="{{receiverName}}" id="receiverName" hidden>
                                     <input value="{{senderName}}" id="senderName" hidden>
                                     <input value="{{receiverImage}}" id="receiverImage" hidden>
                                     <input value="{{senderImage}}" id="senderImage" hidden>
+                                    <input value="{{receiverEmail}}" id="receiverEmail" hidden>
+                                    <input value="{{senderEmail}}" id="senderEmail" hidden>
                                     <h6>{{location}}</h6>
                                     <button id="sendRequest" type="submit" class="btn button" style="width:30%">Send
                                         Friend

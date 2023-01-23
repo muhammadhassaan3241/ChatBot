@@ -22,3 +22,12 @@ export function saveTheday(date) {
     let day = weekday[date.getDay()];
     return day;
 }
+
+export function date(dateObj) {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    let myDate = `${dateObj.getUTCDate()} ${monthNames[(dateObj.getMonth())]} ${(dateObj.getUTCFullYear())}`;
+    return myDate;
+}

@@ -1,0 +1,20 @@
+{{#discussions}}
+<div class="list-group" id="chats-{{roomId}}" role="tablist"
+    onclick="changeChatView({{json messages}},{{myID}},{{json time}});">
+    <a href="#list-chat" class="filterDiscussions all unread single" id="list-chat-list-{{id}}" data-toggle="list"
+        role="tab" onclick="changeChatView({{json messages}},{{myID}});">
+        <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" alt="avatar">
+        <div class="status">
+            <i class="material-icons offline">fiber_manual_record</i>
+        </div>
+        <div class="new bg-green">
+            <span>{{messageCount}}</span>
+        </div>
+        <div class="data">
+            <h5>{{sender}}</h5>
+            <span>{{day}}</span>
+            <p>{{message}}</p>
+        </div>
+    </a>
+</div>
+{{/discussions}}
