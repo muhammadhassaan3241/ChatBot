@@ -1,35 +1,38 @@
 import { SocketIOManager } from "../app.js"
+import { date, formatAMPM, saveTheday } from "../config/time.js"
 import { Notification } from "../model/notification.model.js"
 // ======================================================================== IMPORTING MODULES AND PACKAGES
 
 // SINGLETON PATTERNS
 // SINGLETON CLASS IMPLEMENTATION
 // =============================================================== START
-setTimeout((req, res) => {
+setTimeout(() => {
     SocketIOManager.getInstance().start(() => {
         SocketIOManager.getInstance().dataListen('sentNotification', async (data) => {      // SENDING FRIEND REQUEST
-            const getRoom = await Notification.find({ roomId: data.room })      // GETTING ROOM ID
-            function roomId(data) {             // CHECKING ROOM ID
-                if (getRoom.roomId === data.room) {
-                    return getRoom.data.room
-                }
-                else {
-                    return data.room
-                }
-            }
+
+            const senderId = data.sender.senderId;
+            const receiverId = data.receiver.receiverId;
+            const getRoom = await Notification.find({ receiver: receiverId });      // GETTING RECEIVER
             if (getRoom.length === 0) {
-                const sendingFriendRequest = await Notification.create({        // CREATING ROOM AND SENDING FREIND REQUEST
-                    roomId: roomId(data),
-                    users: data.sender,
-                    friend: data.receiver,
-                    friendRequest: data,
+                const notification = new Notification({        // CREATING ROOM AND SENDING FREIND REQUEST
                     sent: true,
+                    roomId: data.room,
+                    socket: data.socket,
+                    sender: senderId,
+                    receiver: receiverId,
+                    senderData: data.sender,
+                    receiverData: data.receiver,
+                    friendRequest: data.message,
                 })
-                console.log({ sendingFriendRequest });
-                SocketIOManager.getInstance().dataTransferToSpecficRoom('newFriendRequest', sendingFriendRequest.roomId, sendingFriendRequest)
+                console.log({ getRoom: 'Friend Request Sent' });
+
+                // SocketIOManager.getInstance().userJoin(`room-${data.room}`);
+                SocketIOManager.getInstance().dataTransferToSpecficRoom('newFriendRequest', notification, () => {
+                    console.log("Data has been emitted");
+                })
             }
             if (getRoom.length > 0) {
-                console.log('you already have sent friend request');
+                console.log('you already have sent friend request to this user');
             }
         })
 

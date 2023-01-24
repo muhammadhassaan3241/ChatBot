@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import cookieSession from "cookie-session";
 import { fileURLToPath } from "url";
 import session from "express-session";
 import http from "http";
@@ -91,8 +90,15 @@ export class SocketIOManager {
       this.super_socket = socket;
       callback()
     });
-
   }
+
+  stop(callback) {
+    io.on("disconnect", (socket) => {
+      this.super_socket = socket;
+      callback()
+    });
+  }
+
   getCount() {
     return this.log.length;
   }
@@ -107,14 +113,25 @@ export class SocketIOManager {
 
   userJoin(presentRoom) {
     this.super_socket.join(presentRoom)
+    console.log(this.super_socket.rooms);
+  }
+
+  userLeave(presentRoom) {
+    this.super_socket.leave(presentRoom)
+    console.log(this.super_socket.rooms);
   }
 
   dataTransfer(nameSpace, data) {
     this.super_socket.emit(nameSpace, data)
   }
 
-  dataTransferToSpecficRoom(nameSpace, room, data) {
-    this.super_socket.to(room).emit(nameSpace, data)
+  dataTransferToSpecficRoom(nameSpace, data, callback) {
+    if (this.super_socket.rooms[data.receiver]) {
+      console.log(this.super_socket.rooms);
+      // io.sockets.sockets[data.receiver].emit(nameSpace, data);
+
+      callback()
+    }
   }
 
   dataListen(nameSpace, callback) {
@@ -123,9 +140,10 @@ export class SocketIOManager {
     })
   }
 
-  createNewRoom(newRoom) {
-    this.super_socket.on('create_room', (data) => {
-      this.super_socket.join(newRoom)
+  createNewRoom(newRoom, callback) {
+    this.super_socket.on('create_room', (data = newRoom) => {
+      this.super_socket.join(data)
+      callback()
     })
   }
 
@@ -136,25 +154,9 @@ export class SocketIOManager {
     )
   }
 
-  sendNotification(oldNameSpace, newNameSpace) {
+  sendNotification(oldNameSpace) {
     socket.on(oldNameSpace, (data) => {
-      // const sender = {
-      //   content: data.message,
-      //   senderId: data.sender,
-      //   senderName: data.senderName,
-      //   senderImage: data.senderImage,
-      //   time: (Date.now),
-      //   day: saveTheday(Date.now()),
-      // }
-      // const receiver = {
-      //   recieverId: data.reciever,
-      //   receiverName: data.receiverName,
-      //   receiverImage: data.receiverImage,
-      //   time: formatAMPM(Date.now),
-      //   day: saveTheday(Date.now()),
-      // }
 
-      // socket.to(receiver).emit(newNameSpace, sender);
     });
   }
 

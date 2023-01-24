@@ -15,7 +15,7 @@ setTimeout(() => {
             if (!oldRoom) {
                 const newRoom = await Message.create({
                     roomId: data.room,
-                    friend: data.id,
+                    sender: data.id,
                     messages: data.text,
                     socket: data.socket,
                 })

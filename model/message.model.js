@@ -9,11 +9,11 @@ const messageSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAG
         type: String,
         required: true,
     }],
-    users: [{
+    sender: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
-    friend: [{
+    receiver: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],

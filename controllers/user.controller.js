@@ -1,6 +1,9 @@
 import { User } from "../model/user.model.js";
 import jwt from "jsonwebtoken"
 import { randomBytes } from "crypto";
+import { SocketIOManager } from "../app.js";
+import Cookies from "js-cookie";
+
 // ========================================== IMPORT MODULES AND PACKAGES
 
 
@@ -26,6 +29,9 @@ export async function signUp(req, res, next) {
     });
 
     if (newUser) {           // ======= CREATING JWT TOKEN
+      SocketIOManager.getInstance().start(() => {
+        SocketIOManager.getInstance().userJoin('main_room')
+      })
       const token = jwt.sign(
         {
           id: newUser.id,
@@ -65,6 +71,9 @@ export async function signIn(req, res, next) {
     }
 
     if (user && user.password === password) {
+      SocketIOManager.getInstance().start(() => {
+        SocketIOManager.getInstance().userJoin(`${user.id}`)
+      })
       const token = jwt.sign(
         {
           id: user.id,
@@ -94,8 +103,12 @@ export async function signIn(req, res, next) {
 // =============================================================== SIGNING IN USER
 export async function signOut(req, res, next) {
 
-  res.clearCookie('connect.sid');
-  res.clearCookie('user_info');
+
+  Cookies.remove('connect.sid');
+  Cookies.remove('user_info');
+  // SocketIOManager.getInstance().stop(() => {
+  //   SocketIOManager.getInstance().userLeave(`${req.user.id}-${req.user.firstName}-left`)
+  // })
   res.redirect('/');
 
 }

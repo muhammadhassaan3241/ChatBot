@@ -1,0 +1,21 @@
+<div class="list-group" id="alerts" role="tablist">
+    {{#notifications}}
+    <a href="#" class="filterNotifications all latest notification" data-toggle="list">
+        {{#sender}}
+        <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+        {{/sender}}
+        <div class="status">
+            <i class="material-icons online">fiber_manual_record</i>
+        </div>
+        <div class="data">
+            <p>{{message}}</p>
+            <span>{{date}}</span>
+            <br>
+            <div class="btn-group" style="gap: 8%;margin: 2% auto">
+                <button type="button" class="btn w-100" style="background: #2196F3;color:#fff;">Accept</button>
+                <button type="button" class="btn w-100" style="background: #2196F3;color:#fff;">Reject</button>
+            </div>
+        </div>
+    </a>
+    {{/notifications}}
+</div>

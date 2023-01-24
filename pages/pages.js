@@ -6,6 +6,7 @@ import { Notification } from "../model/notification.model.js"
 import { date, formatAMPM, saveTheday } from "../config/time.js";
 import { Message } from "../model/message.model.js";
 import path from "path";
+import mongoose from "mongoose";
 const pagesRoutes = Router();
 // ================================================== IMPORTS MODULES AND PACKAGES
 
@@ -21,17 +22,16 @@ pagesRoutes.get("/", (req, res) => {
 });
 // ============================================================================================== SIGN IN
 pagesRoutes.get("/chat", Token, async (req, res) => {
-  const friends = [];
+  var contacts = [];
   const discussions = [];
   const notifications = [];
   const userId = req.user.id;
-  const users = await User.find();
   const user = await User.findById(userId);
-  const notification = await Notification.find({ friend: userId }).populate('users');
   const message = await Message.find({ friend: userId }).populate('users')
   message.filter((r) => {
     discussions.push({
       roomId: r.roomId,
+      senderId: r.friend,
       sender: r.friend.map((u) => { return `${u.firstName} ${u.lastName}` }),
       senderImage: r.friend.map((u) => { return u.image }),
       messages: r.messages,
@@ -41,54 +41,69 @@ pagesRoutes.get("/chat", Token, async (req, res) => {
     })
   })
 
+  // ========================================== GETTING ALL CONTACTS EXCEPT YOURS
+  const users = await User.find();
+  const index = users.findIndex((m) => {
+    return m.id === userId
+  })
+  if (index !== -1) users.splice(index, 1)
   users.filter((u) => {
-    friends.push({
+    contacts.push({
       id: u.id,
       name: `${u.firstName} ${u.lastName}`,
       image: u.image,
+      location: u.location,
     })
   });
 
-  notification.filter((n) => {
-    notifications.push({
-      sender: n.users.map((nu) => { return `${nu.firstName} ${nu.lastName}` }),
-      senderImage: n.friendRequest.map((ni) => { return ni.senderImage }),
-      message: n.users.map((nu) => { return `${nu.firstName} ${nu.lastName} sent you a friend request` }),
-      time: formatAMPM(n.createdAt),
-      day: saveTheday(n.createdAt),
-      date: date(n.createdAt),
-    })
-  })
+  // const notify = await Notification.find();
+  // notify.filter((n) => {
+  //   if (JSON.stringify(n.receiver) === JSON.stringify(req.user.id)) {
+  //     notifications.push({
+  //       message: n.friendRequest,
+  //       time: formatAMPM(n.createdAt),
+  //       date: date(n.createdAt),
+  //       day: saveTheday(n.createdAt),
+  //       sender: n.sender,
+  //       receiver: n.receiver,
+  //       room: n.roomId,
+  //       socket: n.socket,
+  //     })
+  //   }
+  // })
 
-  console.log({ discussions });
   res.render("chat", {
     title: "ChatIO",
     user: user,
     users: users,
-    friends: friends,
-    discussions: discussions,
     myID: userId,
-    notifications: notifications,
+    contacts: contacts,
+    discussions: discussions,
+    // notifications: notifications,
   });
 });
 // ============================================================================================== CHAT
-pagesRoutes.get('/add-friend/:id', Token, async (req, res) => {
+pagesRoutes.get('/friend-profile/:id', Token, async (req, res) => {
 
-  const sender = await User.findById(req.user.id);
-  const receiver = await User.findById(req.params.id);
-  const friend = [{
-    name: `${receiver.firstName} ${receiver.lastName}`,
-    sender: sender.id,
-    receiver: receiver.id,
-    senderName: sender.firstName,
-    receiverName: receiver.firstName,
-    receiverImage: receiver.image,
-    senderImage: sender.image,
-    receiverEmail: receiver.email,
-    senderEmail: sender.email,
-  }];
-
-  // console.log(friend);
+  const send = await User.findById(req.user.id);
+  const receive = await User.findById(req.params.id);
+  const sender = await User.findById(send);
+  const user = await User.findById(receive);
+  const friend = [];
+  friend.push({
+    sender: {
+      id: send.id,
+      name: `${send.firstName} ${send.lastName}`,
+      image: send.image,
+      location: send.location,
+    },
+    receiver: {
+      id: receive.id,
+      name: `${receive.firstName} ${receive.lastName}`,
+      image: receive.image,
+      location: receive.location,
+    }
+  })
   res.render('friendProfile', { title: "Profile", friend: friend });
 
 })

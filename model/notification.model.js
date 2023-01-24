@@ -9,18 +9,21 @@ const notifcationSchema = new Schema({     // =========== CREATING SCHEMA FOR ME
         type: String,
         required: true,
     }],
-    users: [{
+    sender: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }],
-    friend: [{
+    },
+    receiver: {
         type: Schema.Types.ObjectId,
         ref: 'User'
+    },
+    senderData: [{
+        type: Schema.Types.Mixed,
     }],
-    messages: [{
-        type: String,
-        ref: "Message"
+    receiverData: [{
+        type: Schema.Types.Mixed,
     }],
+
     notifications: [{
         type: Schema.Types.Mixed,
     }],
@@ -38,7 +41,7 @@ const notifcationSchema = new Schema({     // =========== CREATING SCHEMA FOR ME
         type: Boolean,
         default: false,
     },
-    seen: {
+    accept: {
         type: Boolean,
         default: false,
     },
@@ -48,4 +51,4 @@ const notifcationSchema = new Schema({     // =========== CREATING SCHEMA FOR ME
 // ===================================== STOP
 
 
-export const Notification = model('Room', notifcationSchema);  // ========== EXPORTING MODEL
+export const Notification = model('Notification', notifcationSchema);  // ========== EXPORTING MODEL

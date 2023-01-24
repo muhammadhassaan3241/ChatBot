@@ -123,45 +123,49 @@ function changeChatView(messages, myID, time) {
 
 // NOTIFICATION SETTINGS
 
-// Soc.on('connect', () => {
-//   console.log("notication client side");
-// })
-
-const form1 = $("#addFriendForm"); // form
-const sender = $('#sender'); // you
-const fullname = $('#name');
-const senderName = $('#senderName'); // your name
-const senderImage = $('#senderImage'); // your image
-const senderEmail = $('#senderEmail') // your email
-const receiver = $('#receiver'); // friend
-const receiverName = $('#receiverName'); // friend name
-const receiverImage = $('#receiverImage'); // friend image  
-const receiverEmail = $('#receiverEmail') // friend email
+const senderId = $('#senderId');
+const senderName = $('#senderName');
+const senderImage = $('#senderImage');
+const senderLocation = $('#senderLocation');
+const receiverId = $('#receiverId');
+const receiverName = $('#receiverName');
+const receiverImage = $('#receiverImage');
+const receiverLocation = $('#receiverLocation');
+const notificationForm = $('#notificationForm');
 const sendButton = $('#sendRequest'); // send button
 
-form1.submit(async (e) => {
+notificationForm.submit(async (e) => {
   e.preventDefault();
   let request = {
-    sender: sender.val(),
-    senderName: senderName.val(),
-    senderImage: senderImage.val(),
-    receiver: receiver.val(),
-    receiverName: receiverName.val(),
-    receiverImage: receiverImage.val(),
-    senderEmail: senderEmail.val(),
-    receiverEmail: receiverEmail.val(),
+
+    sender: {
+      senderId: senderId.val(),
+      senderName: senderName.val(),
+      senderImage: senderImage.val(),
+      senderLocation: senderLocation.val(),
+    },
+    receiver: {
+      receiverId: receiverId.val(),
+      receiverName: receiverName.val(),
+      receiverImage: receiverImage.val(),
+      receiverLocation: receiverLocation.val(),
+    },
+    socket: socket.id,
     message: `${senderName.val()} sent you a friend request`,
-    time: Date.now(),
     room: Math.floor(Math.random() * 10000) + Date.now(),
+    time: Date.now(),
+
 
   }
-  console.log(request);
+  // console.log(request);
 
   sendButton.click(function () {
-    socket.emit('sentNotification', request)
+    socketEmitter('sentNotification', request)
     alert('Your request has been sent')
     return false;
   })
-
 })
 
+socket.on('newFriendRequest', (data) => {
+  console.log(data);
+})
