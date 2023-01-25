@@ -1,15 +1,40 @@
 
 const socket = io(); // Always place socket on top otherwise it won't initialize
 
-socket.on("connect", () => {
-  console.log('message client side');
+socket.on('message', (data) => {
+  console.log(data);
 });
+
 
 // import SocketIOManager from "../../app";
 function socketEmitter(nameSpace, data) {
   //event emitter function
   socket.emit(nameSpace, data);
 }
+
+
+const selectedUser = $("#selectedUser");
+const newChatForm = $("#startNewChatForm");
+const startNewChatButton = $("#newChatButton");
+
+
+newChatForm.submit(async (e) => {
+  e.preventDefault();
+  let userId = selectedUser.val()
+  startNewChatButton.click(function () {
+    if (userId === "") {
+      alert('Please select a friend to talk')
+      return false;
+    } else {
+      socket.emit('startNewChat', userId)
+      console.log('startNewChat', userId);
+      alert('new chat has been created')
+      return false;
+    }
+  })
+})
+
+
 
 // ---Form Start--- \\
 const form = $("#chatForm"); // form
@@ -44,7 +69,6 @@ form.submit(async (e) => {
             </div>`;
 
   document.getElementById("chatbox").innerHTML += html;
-
   return false;
 });
 
@@ -139,20 +163,19 @@ notificationForm.submit(async (e) => {
   let request = {
 
     sender: {
-      senderId: senderId.val(),
-      senderName: senderName.val(),
-      senderImage: senderImage.val(),
-      senderLocation: senderLocation.val(),
+      id: senderId.val(),
+      name: senderName.val(),
+      image: senderImage.val(),
+      location: senderLocation.val(),
     },
     receiver: {
-      receiverId: receiverId.val(),
-      receiverName: receiverName.val(),
-      receiverImage: receiverImage.val(),
-      receiverLocation: receiverLocation.val(),
+      id: receiverId.val(),
+      name: receiverName.val(),
+      image: receiverImage.val(),
+      location: receiverLocation.val(),
     },
     socket: socket.id,
     message: `${senderName.val()} sent you a friend request`,
-    room: Math.floor(Math.random() * 10000) + Date.now(),
     time: Date.now(),
 
 
@@ -161,11 +184,40 @@ notificationForm.submit(async (e) => {
 
   sendButton.click(function () {
     socketEmitter('sentNotification', request)
+    sendButton.replaceWith('<button class="btn button w-50" id="sendRequest" disabled>Friend Request Sent</button>')
     alert('Your request has been sent')
     return false;
   })
 })
 
-socket.on('newFriendRequest', (data) => {
+const requestButtons = $("#requestButtons");
+const accepted = $('#accepted');
+const acceptButton = $("#accept");
+const rejectButton = $("#reject");
+const friend = $("#rId");
+
+acceptButton.click(function () {
+  let name = {
+    friend: friend.val(),
+    socket: socket.id,
+  }
+  if (name) {
+    requestButtons.html(`<div id="accepted"><p>You are now friends</p></div>`).attr('disabled', true)
+    socketEmitter("acceptedRequest", name)
+  }
+})
+
+// acceptButton.click(function () {
+//   const name = {
+//     friend: friend.val(),
+//     socket: socket.id,
+//   }
+//   if (name) {
+//     requestButtons.replaceWith("<div><p>You are now friends</p></div>")
+//   }
+//   socketEmitter("acceptedRequest", name)
+// })
+
+socket.on('requestAccepted', (data) => {
   console.log(data);
 })

@@ -5,10 +5,6 @@ import { Schema, model, mongo } from 'mongoose';
 // MONGOOSE MESSAGE MODEL
 // ===================================== START
 const notifcationSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING ROOM 
-    roomId: [{
-        type: String,
-        required: true,
-    }],
     sender: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -45,6 +41,10 @@ const notifcationSchema = new Schema({     // =========== CREATING SCHEMA FOR ME
         type: Boolean,
         default: false,
     },
+    reject: {
+        type: Boolean,
+        default: false,
+    }
 }, {
     timestamps: true,
 });

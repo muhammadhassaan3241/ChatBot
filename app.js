@@ -55,6 +55,15 @@ hbs.registerPartials(path.join(viewsPath, 'chat'));
 hbs.registerHelper("json", (context) => {
   return JSON.stringify(context);
 });
+hbs.registerHelper('if_true', function (value, opts) {
+  if (value) {
+    return opts.fn(this);
+  } else {
+    return opts.inverse(this);
+  }
+});
+
+
 // HANDLEBARS HELPERS END
 
 app.set('view engine', 'hbs') // SETTING TEMPLATING ENGINE
@@ -64,7 +73,7 @@ import { Server as SocketServer } from "socket.io";
 const server = http.createServer(app);
 const io = new SocketServer(server);
 io.on('connection', (socket) => {
-  console.log("Socket Connected");
+  socket.emit('message', 'Welcome to ChatIO')
 })
 
 // ======================================================================== IMPORTING MODULES AND PACKAGES
@@ -74,37 +83,42 @@ io.on('connection', (socket) => {
 // ============================================================= START
 export class SocketIOManager {
 
-  static getInstance() {
-    if (!SocketIOManager.instance) {
-      SocketIOManager.instance = new SocketIOManager();
+  static getInstance(io) {
+    if (!this.instance) {
+      this.lock = true;
+      this.instance = new SocketIOManager(io);
+      this.lock = false;
     }
-    return SocketIOManager.instance;
+    return this.instance;
   }
 
-  constructor() {
+
+  constructor(io) {
+    this.io = io;
     this.logs = [];
+    this.super_socket = undefined;
+  }
+
+  log(message) {
+    this.logs.push(message);
+    console.log(message);
+  }
+
+  acceptRequest(callback) {
+    callback()
   }
 
   start(callback) {
     io.on("connection", (socket) => {
       this.super_socket = socket;
-      callback()
+      callback(socket)
     });
   }
 
   stop(callback) {
-    io.on("disconnect", (socket) => {
-      this.super_socket = socket;
-      callback()
+    this.io.on("disconnect", (socket) => {
+      callback(socket);
     });
-  }
-
-  getCount() {
-    return this.log.length;
-  }
-
-  log(message) {
-    console.log(message);
   }
 
   userConnection(user) {
@@ -126,12 +140,8 @@ export class SocketIOManager {
   }
 
   dataTransferToSpecficRoom(nameSpace, data, callback) {
-    if (this.super_socket.rooms[data.receiver]) {
-      console.log(this.super_socket.rooms);
-      // io.sockets.sockets[data.receiver].emit(nameSpace, data);
-
-      callback()
-    }
+    this.super_socket.to(data.socket).emit(nameSpace, data)
+    callback()
   }
 
   dataListen(nameSpace, callback) {
@@ -141,22 +151,14 @@ export class SocketIOManager {
   }
 
   createNewRoom(newRoom, callback) {
-    this.super_socket.on('create_room', (data = newRoom) => {
-      this.super_socket.join(data)
-      callback()
-    })
+    this.super_socket.join(newRoom, () => {
+      callback();
+    });
   }
 
-  privateMessage(nameSpace) {
+  privateMessage(nameSpace, callback) {
     this.super_socket.on(nameSpace, async (data) => {
-
-    }
-    )
-  }
-
-  sendNotification(oldNameSpace) {
-    socket.on(oldNameSpace, (data) => {
-
+      callback(data);
     });
   }
 
@@ -168,10 +170,6 @@ export class SocketIOManager {
     })
   }
 
-  // sendEvent(key, event) {
-  //   console.log(event + this.super_socket);
-  //   this.super_socket.emit(key, event);
-  // }
 }
 // ============================================================= STOP
 

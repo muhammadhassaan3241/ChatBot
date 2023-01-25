@@ -2,7 +2,8 @@
     {{#notifications}}
     <a href="#" class="filterNotifications all latest notification" data-toggle="list">
         {{#sender}}
-        <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+        <img class="avatar-md" src="{{senderImage}}" data-toggle="tooltip" data-placement="top" title="Janette"
+            alt="avatar">
         {{/sender}}
         <div class="status">
             <i class="material-icons online">fiber_manual_record</i>
@@ -11,10 +12,19 @@
             <p>{{message}}</p>
             <span>{{date}}</span>
             <br>
-            <div class="btn-group" style="gap: 8%;margin: 2% auto">
-                <button type="button" class="btn w-100" style="background: #2196F3;color:#fff;">Accept</button>
-                <button type="button" class="btn w-100" style="background: #2196F3;color:#fff;">Reject</button>
+            {{#if_true accept}}
+            <div>
+                You are now friends
             </div>
+            {{else}}
+            <div id="requestButtons" class="btn-group" style="gap: 8%;margin: 2% auto">
+                <button type="button" id="accept" class="btn w-100"
+                    style="background: #2196F3;color:#fff;">Accept</button>
+                <input id="rId" value="{{receiver}}" hidden>
+                <button type="button" id="reject" class="btn w-100"
+                    style="background: #2196F3;color:#fff;">Reject</button>
+            </div>
+            {{/if_true}}
         </div>
     </a>
     {{/notifications}}

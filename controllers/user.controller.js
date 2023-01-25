@@ -29,9 +29,7 @@ export async function signUp(req, res, next) {
     });
 
     if (newUser) {           // ======= CREATING JWT TOKEN
-      SocketIOManager.getInstance().start(() => {
-        SocketIOManager.getInstance().userJoin('main_room')
-      })
+
       const token = jwt.sign(
         {
           id: newUser.id,
@@ -71,8 +69,10 @@ export async function signIn(req, res, next) {
     }
 
     if (user && user.password === password) {
-      SocketIOManager.getInstance().start(() => {
-        SocketIOManager.getInstance().userJoin(`${user.id}`)
+      SocketIOManager.getInstance().start(async (socket) => {
+        console.log(`${user.id} Connected`);
+        user.socket = socket.id;
+        await user.save()
       })
       const token = jwt.sign(
         {
@@ -103,14 +103,17 @@ export async function signIn(req, res, next) {
 // =============================================================== SIGNING IN USER
 export async function signOut(req, res, next) {
 
+  const id = req.user.id;
+  const user = await User.findById(id);
+  if (user) {
+    SocketIOManager.getInstance().stop((socket) => {
+      console.log(`${user.id} Disconnected`);
+      Cookies.remove('connect.sid');
+      Cookies.remove('user_info');
+      res.redirect('/');
+    })
 
-  Cookies.remove('connect.sid');
-  Cookies.remove('user_info');
-  // SocketIOManager.getInstance().stop(() => {
-  //   SocketIOManager.getInstance().userLeave(`${req.user.id}-${req.user.firstName}-left`)
-  // })
-  res.redirect('/');
-
+  }
 }
 // =============================================================== SIGNING OUT USER
 export async function forgotPassword(req, res, next) {

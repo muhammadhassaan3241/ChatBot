@@ -1,10 +1,10 @@
 <div class="list-group" id="contacts" role="tablist">
-    {{#contacts}}
+    {{#friends}}
     <a href="#" class="filterMembers all online contact" data-toggle="list">
-        <input value="{{id}}" id="userId" hidden>
+        {{!-- <input value="{{id}}" id="userId" hidden>
         <input value="{{name}}" id="userName" hidden>
         <input value="{{image}}" id="userImage" hidden>
-        <input value="{{location}}" id="userLocation" hidden>
+        <input value="{{location}}" id="userLocation" hidden> --}}
         <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
         <div class="status">
             <i class="material-icons online">fiber_manual_record</i>
@@ -17,5 +17,5 @@
             <i class="material-icons">person</i>
         </div>
     </a>
-    {{/contacts}}
+    {{/friends}}
 </div>
