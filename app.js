@@ -17,7 +17,7 @@ import "./config/machineId.js";
 
 const app = express(); // ASSIGNING VARIABLE AS EXPRESS
 const forms = multer(); // ASSIGNING FORMS AS MULTER
-const port = process.env.PORT || 3000; // ASSIGNING 8080 AS PORT
+const port = process.env.PORT || 8080; // ASSIGNING 8080 AS PORT
 dotenv.config(); // USING ENVIROMENTAL VARIABLES
 
 app.use(            // CREATING EXPRESS SESSION
@@ -139,8 +139,8 @@ export class SocketIOManager {
     this.super_socket.emit(nameSpace, data)
   }
 
-  dataTransferToSpecficRoom(nameSpace, data, callback) {
-    this.super_socket.to(data.socket).emit(nameSpace, data)
+  dataTransferToSpecficRoom(nameSpace, socket, data, callback) {
+    this.super_socket.to(socket).emit(nameSpace, data)
     callback()
   }
 

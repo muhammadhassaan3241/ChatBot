@@ -23,6 +23,7 @@ pagesRoutes.get("/", (req, res) => {
 });
 // ============================================================================================== SIGN IN
 pagesRoutes.get("/chat", Token, async (req, res) => {
+
   const contacts = [];
   const friends = [];
   const discussions = [];
@@ -30,20 +31,8 @@ pagesRoutes.get("/chat", Token, async (req, res) => {
   const userId = req.user.id;
   const users = await User.find();
   const user = await User.findById(userId);
-  const message = await Message.find({ friend: userId }).populate('users')
-  message.filter((r) => {
-    discussions.push({
-      roomId: r.roomId,
-      senderId: r.friend,
-      sender: r.friend.map((u) => { return `${u.firstName} ${u.lastName}` }),
-      senderImage: r.friend.map((u) => { return u.image }),
-      messages: r.messages,
-      time: formatAMPM(r.createdAt),
-      day: saveTheday(r.createdAt),
-      date: date(r.createdAt)
-    })
-  })
-
+  // const message = await Message.find({ 'room': { $elemMatch: { 'users': { $elemMatch: { 'user1': userId } } } } });
+  // console.log(message);
   // ========================================== GETTING ALL CONTACTS EXCEPT YOURS
   const fri = user.friends;
   fri.filter(async (f) => {
