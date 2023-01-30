@@ -1,8 +1,9 @@
 {{#discussions}}
 <div class="list-group" id="chats-{{roomId}}" role="tablist"
-    onclick="changeChatView({{json messages}},{{myID}},{{json time}});">
+    onclick="changeChatView({{json messages}},{{myId}},{{json time}});">
+    <input onclick="selectUser({{json friend}})" hidden>
     <a href="#list-chat" class="filterDiscussions all unread single" id="list-chat-list-{{id}}" data-toggle="list"
-        role="tab" onclick="changeChatView({{json messages}},{{myID}});">
+        role="tab" onclick="changeChatView({{json messages}},{{myId}});">
         <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" alt="avatar">
         <div class="status">
             <i class="material-icons offline">fiber_manual_record</i>

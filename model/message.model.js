@@ -20,18 +20,25 @@ const messageSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAG
             ref: "User"
         }],
     }],
+    sender: {
+        type: Schema.Types.Mixed,
+        ref: "User"
+    },
+    receiver: {
+        type: Schema.Types.Mixed,
+        ref: "User"
+    },
     message: [{
         sender: {
-            type: Schema.Types.ObjectId,
+            type: Schema.Types.Mixed,
             ref: "User"
         },
         receiver: {
-            type: Schema.Types.ObjectId,
+            type: Schema.Types.Mixed,
             ref: "User"
         },
         content: {
             type: Schema.Types.Mixed,
-            required: true,
         },
         sent: {
             type: Boolean,
@@ -45,6 +52,10 @@ const messageSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAG
             type: Boolean,
             default: false,
         },
+        createdAt: {
+            type: Date,
+            default: Date.now()
+        }
     }],
 
 }, {

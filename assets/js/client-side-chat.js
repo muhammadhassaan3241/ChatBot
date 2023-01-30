@@ -16,7 +16,6 @@ $(document).ready(function () {
 
   const selectedUser = $("#selectedUser");
   const user2_Id = $("#user2_Id");
-  const textMessage = $("#textMessage");
   const newChatForm = $("#startNewChatForm");
   const startNewChatButton = $("#newChatButton");
 
@@ -25,11 +24,9 @@ $(document).ready(function () {
     e.preventDefault();
     let user1 = user2_Id.val();
     let user2 = selectedUser.val();
-    let message = textMessage.val();
     let users = {
       myself: user1,
       friend: user2,
-      textMessage: message,
     }
     console.log(users);
     startNewChatButton.click(function () {
@@ -46,6 +43,9 @@ $(document).ready(function () {
   })
 
 
+  function selectUser(friend) {
+    console.log(friend);
+  }
 
   // ---Form Start--- \\
   const form = $("#chatForm"); // form
@@ -58,7 +58,6 @@ $(document).ready(function () {
     let data = {
       text: textarea.val(),
       id: userId.val(),
-      socket: socket.id,
       room: Math.floor(Math.random() * 10000) + Date.now(),
     };
 
@@ -85,18 +84,6 @@ $(document).ready(function () {
 
   socket.on("privateMessage", async (data) => {
     data.map((m) => {
-      var html = ""; // displaying your friend's message
-      var date = new Date.now();
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      const ampm = hours >= 12 ? "PM" : "AM";
-
-      hours %= 12;
-      hours = hours || 12;
-      minutes = minutes < 10 ? `0${minutes}` : minutes;
-
-      const time = `${hours}:${minutes} ${ampm}`;
-
       html += `<div class="message">         
            <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
              data-placement="top" title="Keith" alt="avatar" />

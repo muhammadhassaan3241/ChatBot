@@ -146,6 +146,7 @@ export class SocketIOManager {
 
   dataListen(nameSpace, callback) {
     this.super_socket.on(nameSpace, async (data) => {
+      console.log(data);
       callback(data)
     })
   }

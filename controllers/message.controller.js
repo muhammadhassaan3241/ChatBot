@@ -1,5 +1,6 @@
 import { SocketIOManager } from "../app.js"
 import { Message } from "../model/message.model.js"
+import { User } from "../model/user.model.js"
 // ======================================================================== IMPORTING MODULES AND PACKAGES
 // GET USER-ID AND ROOM FROM URL
 
@@ -10,9 +11,18 @@ import { Message } from "../model/message.model.js"
 setTimeout(() => {
     SocketIOManager.getInstance().start((socket) => {
         SocketIOManager.getInstance().dataListen('startNewChat', async (data) => {
-            const getRoom = await Message.findOne({ $or: [{ $and: [{ "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.myself } } } } }, { "room": { $elemMatch: { "users": { $elemMatch: { "user2": data.friend } } } } }] }, { $and: [{ "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.friend } } } } }, { "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.myself } } } } }] }] });
-
-            if (getRoom === null) {
+            const user1 = await User.findById(data.myself);
+            const user2 = await User.findById(data.friend);
+            const getRoom = await Message.findOne({
+                $or: [
+                    { $and: [{ "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.myself } } } } }, { "room": { $elemMatch: { "users": { $elemMatch: { "user2": data.friend } } } } }] },
+                    { $and: [{ "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.friend } } } } }, { "room": { $elemMatch: { "users": { $elemMatch: { "user2": data.myself } } } } }] }
+                ]
+            })
+            if (getRoom) {
+                console.log("room already exist");
+            }
+            else {
                 const newRoom = await Message.create({
                     room: [{
                         roomId: Math.floor(Math.random() * 1000) + Date.now(),
@@ -22,29 +32,15 @@ setTimeout(() => {
                             user2: data.friend,
                         }],
                     }],
-                    message: [{
-                        sender: data.myself,
-                        receiver: data.friend,
-                        content: data.textMessage,
-                        sent: true,
-                    }]
+                    sender: user1,
+                    receiver: user2,
                 });
-                if (newRoom) {
-                    SocketIOManager.getInstance().dataTransferToSpecficRoom("startNewChat", socket.id, newRoom, () => {
-                        console.log(`socket has been emitted to ${socket.id}`);
-                        console.log({ newRoom });
-                    })
-                }
-            } else {
-                SocketIOManager.getInstance().dataListen("privateMessage", async (data) => {
-
-                })
+                console.log("New Room", { newRoom });
             }
+        });
 
+        // CHATTING START
 
-
-
-        })
     })
 })
 // =============================================================== STOP
