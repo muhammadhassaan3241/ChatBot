@@ -30,11 +30,11 @@ const messageSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAG
     },
     message: [{
         sender: {
-            type: Schema.Types.Mixed,
+            type: Schema.Types.ObjectId,
             ref: "User"
         },
         receiver: {
-            type: Schema.Types.Mixed,
+            type: Schema.Types.ObjectId,
             ref: "User"
         },
         content: {

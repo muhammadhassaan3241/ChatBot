@@ -62,7 +62,13 @@ hbs.registerHelper('if_true', function (value, opts) {
     return opts.inverse(this);
   }
 });
-
+hbs.registerHelper('ifCheck', function (a, b, options) {
+  if (a > b) {
+    return options.fn(this);
+  } else {
+    return options.inverse(this);
+  }
+});
 
 // HANDLEBARS HELPERS END
 

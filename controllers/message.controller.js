@@ -40,7 +40,41 @@ setTimeout(() => {
         });
 
         // CHATTING START
+        SocketIOManager.getInstance().dataListen('roomId', async (data) => {
+            const getRoom = await Message.findOne({ "room.roomId": data.roomId });
+            const changeRoom = [];
+            if (getRoom) {
+                const friend = await User.findById(data.friendId);
+                changeRoom.push({
+                    friend: friend,
+                })
+                SocketIOManager.getInstance().dataTransfer("roomId", data.socketId, changeRoom, () => {
+                    console.log("hass been emiited");
+                })
+            }
 
+        })
     })
 })
 // =============================================================== STOP
+
+
+
+// const getRoom = await Message.findOne({
+            //     $or:
+            //         [
+            //             { "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.senderId } } } } },
+            //             { "room": { $elemMatch: { "users": { $elemMatch: { "user2": data.senderId } } } } }
+            //         ]
+            // });
+
+            // console.log(getRoom);
+
+            // if (getRoom) {
+            //     getRoom.message.push({
+            //         sender: data.senderId,
+            //         receiver: data.selectedUserId,
+            //         content: data.text,
+            //     })
+            //     await getRoom.save();
+            // }

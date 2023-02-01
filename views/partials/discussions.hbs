@@ -1,10 +1,10 @@
 {{#discussions}}
-<div class="list-group" id="chats-{{roomId}}" role="tablist"
-    onclick="changeChatView({{json messages}},{{myId}},{{json time}});">
-    <input onclick="selectUser({{json friend}})" hidden>
-    <a href="#list-chat" class="filterDiscussions all unread single" id="list-chat-list-{{id}}" data-toggle="list"
-        role="tab" onclick="changeChatView({{json messages}},{{myId}});">
+<div class="list-group" role="tablist" style="cursor: pointer;">
+    <a class="filterDiscussions all single active chatRoomId" id="chatRoomId" data-toggle="list" role="tab"
+        aria-valuetext="{{roomId}},{{friendId}},{{socketId}}">
+        {{#senderDetails}}
         <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" alt="avatar">
+        {{/senderDetails}}
         <div class="status">
             <i class="material-icons offline">fiber_manual_record</i>
         </div>
@@ -12,10 +12,16 @@
             <span>{{messageCount}}</span>
         </div>
         <div class="data">
-            <h5>{{sender}}</h5>
+            {{#senderDetails}}
+            <h5>{{firstName}}</h5>
+            {{/senderDetails}}
             <span>{{day}}</span>
-            <p>{{message}}</p>
+            {{#lastMessage}}
+            <p>{{content}}</p>
+            {{/lastMessage}}
         </div>
     </a>
 </div>
 {{/discussions}}
+
+{{!-- '{{roomId}}','{{friendId}}','{{json messages}}','{{json senderDetails}}',{{messageCount}} --}}

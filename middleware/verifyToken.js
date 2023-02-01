@@ -1,6 +1,5 @@
 import { verify } from "jsonwebtoken";
 // ======================================================================== IMPORTING MODULES AND PACKAGES
-export let user;
 // VERIFYING TOKEN 
 // ================================================ START
 export async function Token(req, res, next) {
