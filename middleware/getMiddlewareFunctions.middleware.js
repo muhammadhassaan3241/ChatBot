@@ -96,6 +96,7 @@ export async function getRooms(req, res, next) {
         roomId, sockeId, receiverDetails, day, lastMessage.
         */
         const roomDetails = [];
+        const myself = await User.findById(userId);
         getRoom.map(async (a) => {
             if (JSON.stringify(a.sender) !== JSON.stringify(userId)) {
                 const getUser = await User.findById(a.sender);
@@ -109,9 +110,9 @@ export async function getRooms(req, res, next) {
                     messageCount: a.message.length,
                     day: saveTheday(a.createdAt),
                     friendId: a.sender,
+                    mySocket: myself.socket,
+                    myId: userId,
                 })
-                // return roomDetails;
-
             } else {
                 const getUser = await User.findById(a.receiver);
                 roomDetails.push({
@@ -124,8 +125,9 @@ export async function getRooms(req, res, next) {
                     messageCount: a.message.length,
                     day: saveTheday(a.createdAt),
                     friendId: a.receiver,
+                    mySocket: myself.socket,
+                    myId: userId,
                 })
-                // return roomDetails;
             }
         })
         req.roomDetails = roomDetails;

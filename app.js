@@ -37,7 +37,7 @@ app.use(            // CREATING EXPRESS SESSION
 const accessPath = path.join(process.cwd(), 'assets')
 app.use("/fonts", express.static(path.resolve(accessPath, "/assets/fonts"))); // FONTS
 app.use("/images", express.static(path.resolve(accessPath, "/assets/img"))); //IMAGES
-app.use("/uploads", express.static(path.resolve(accessPath, "uploads"))); // UPLOADS
+app.use("/uploads", express.static(path.resolve(accessPath, "/uploads"))); // UPLOADS
 app.use("/css", express.static(path.resolve(accessPath, "/assets/css"))); // CSS
 app.use("/js", express.static(path.resolve(accessPath, "/assets/js"))); // JS
 app.use(bodyParser.urlencoded({ extended: false })); // USING BODYPARSER FOR JSON CONTENT TYPE
@@ -141,12 +141,13 @@ export class SocketIOManager {
     console.log(this.super_socket.rooms);
   }
 
-  dataTransfer(nameSpace, data) {
-    this.super_socket.emit(nameSpace, data)
+  dataTransfer(nameSpace, data, callback) {
+    this.super_socket.emit(nameSpace, data);
+    callback();
   }
 
-  dataTransferToSpecficRoom(nameSpace, socket, data, callback) {
-    this.super_socket.to(socket).emit(nameSpace, data)
+  dataTransferToSpecificRoom(nameSpace, room, data, callback) {
+    this.super_socket.to(room).emit(nameSpace, data)
     callback()
   }
 
@@ -186,10 +187,12 @@ export class SocketIOManager {
 import "./controllers/friendRequest.controller.js"
 import "./controllers/message.controller.js"
 import accountRoutes from "./routes/account.routes.js";
+import roomRoutes from "./routes/room.routes.js";
 import userRoutes from "./routes/user.routes.js"
 import pagesRoutes from "./pages/pages.js"
 app.use('/', accountRoutes);
 app.use('/', pagesRoutes);
+app.use('/', roomRoutes);
 app.use('/', userRoutes);
 // =========================================================================================== STOP
 

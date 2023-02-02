@@ -2,8 +2,8 @@ $(document).ready(function () {
 
   const socket = io(); // Always place socket on top otherwise it won't initialize
 
-  socket.on('message', (data) => {
-    console.log(data);
+  socket.on('connect', (socket) => {
+    console.log("Socket Connected");
   });
 
 
@@ -41,55 +41,161 @@ $(document).ready(function () {
     })
   })
 
-  // roomId, friendId, messages, senderDetails, messageCount
   $('.chatRoomId').click(function () {
     const data = $(this).attr('aria-valuetext');
     const split = data.split(",");
-    let roomInfo = {
-      roomId: split[0],
-      friendId: split[1],
-      socketId: split[2],
-    }
-    socket.emit("roomId", roomInfo)
-
-
+    // let roomInfo = {
+    //   roomId: split[0],
+    //   friendId: split[1],
+    //   socketId: split[2],
+    //   mySocket: split[3],
+    //   myId: split[4],
+    // }
+    console.log("before");
+    const roomId = split[0];
+    const friendId = split[1];
+    const socketId = split[2];
+    const mySocket = split[3];
+    const myId = split[4];
+    $.ajax({
+      url: `http://localhost:8080/get-room-details?roomId=${roomId}&friendId=${friendId}&myId=${myId}`,
+      type: 'GET',
+      success: function (response) {
+        console.log("The request was successful!");
+        const friendData = response.roomDetails;
+        friendData.map((a) => {
+          console.log(a.friend);
+        })
+        var html = "";
+        friendData.map((a) => {
+          a.friend.map((b) => {
+            html += ` <div class="col-md-12">
+            <div class="inside">
+                <a href="#"><img class="avatar-md" src="${b.image}" data-toggle="tooltip"
+                        data-placement="top" alt="avatar"></a>
+                <div class="status">
+                    <i class="material-icons online">fiber_manual_record</i>
+                </div>
+                <div class="data">
+                    <h5><a href="#">${b.firstName} ${b.lastName}</a></h5>
+                    <span>Active now</span>
+                </div>
+                <button class="btn connect d-md-block d-none" name="1"><i
+                        class="material-icons md-30">phone_in_talk</i></button>
+                <button class="btn connect d-md-block d-none" name="1"><i
+                        class="material-icons md-36">videocam</i></button>
+                <button class="btn d-md-block d-none"><i class="material-icons md-30">info</i></button>
+                <div class="dropdown">
+                    <button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                            class="material-icons md-30">more_vert</i></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <button class="dropdown-item connect" name="1"><i class="material-icons">phone_in_talk</i>Voice
+                            Call</button>
+                        <button class="dropdown-item connect" name="1"><i class="material-icons">videocam</i>Video
+                            Call</button>
+                        <hr>
+                        <button class="dropdown-item"><i class="material-icons">clear</i>Clear History</button>
+                        <button class="dropdown-item"><i class="material-icons">block</i>Block Contact</button>
+                        <button class="dropdown-item"><i class="material-icons">delete</i>Delete Contact</button>
+                    </div>
+                </div>
+            </div>
+        </div>`
+          })
+        })
+        document.getElementById("chatTopBar").innerHTML = html;
+      },
+      error: function (error) {
+        console.log("There was an error with the request.");
+        console.log("after");
+        console.log(error);
+      }
+    });
   });
 
+  socket.on("roomId", (data) => {
+    console.log("2");
+    console.log(data);
 
-  // // // ---Form Start--- \\
-  // const form = $("#chatForm"); // form
-  // const textarea = $("#chatTextArea"); // message
-  // const userId = $("#user-id"); // user id
-  // // ---Form End--- \\
-  // form.submit(async (e) => {
-  //   e.preventDefault(); // prevent form from submit
-  //   let data = {
-  //     text: textarea.val(),
-  //     senderId: userId.val(),
-  //     selectedUser: friendId.val(),
-  //   };
+    return
+    let userInfo = data;
+    var html = "";
+    userInfo.map((u) => {
+      html += ` <div class="col-md-12">
+      <div class="inside">
+          <a href="#"><img class="avatar-md" src="${u.image}" data-toggle="tooltip"
+                  data-placement="top" alt="avatar"></a>
+          <div class="status">
+              <i class="material-icons online">fiber_manual_record</i>
+          </div>
+          <div class="data">
+              <h5><a href="#">${u.firstName} ${u.lastName}</a></h5>
+              <span>Active now</span>
+          </div>
+          <button class="btn connect d-md-block d-none" name="1"><i
+                  class="material-icons md-30">phone_in_talk</i></button>
+          <button class="btn connect d-md-block d-none" name="1"><i
+                  class="material-icons md-36">videocam</i></button>
+          <button class="btn d-md-block d-none"><i class="material-icons md-30">info</i></button>
+          <div class="dropdown">
+              <button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                      class="material-icons md-30">more_vert</i></button>
+              <div class="dropdown-menu dropdown-menu-right">
+                  <button class="dropdown-item connect" name="1"><i class="material-icons">phone_in_talk</i>Voice
+                      Call</button>
+                  <button class="dropdown-item connect" name="1"><i class="material-icons">videocam</i>Video
+                      Call</button>
+                  <hr>
+                  <button class="dropdown-item"><i class="material-icons">clear</i>Clear History</button>
+                  <button class="dropdown-item"><i class="material-icons">block</i>Block Contact</button>
+                  <button class="dropdown-item"><i class="material-icons">delete</i>Delete Contact</button>
+              </div>
+          </div>
+      </div>
+  </div>`
+    })
+    document.getElementById("chatTopBar").innerHTML = html;
 
-  //   console.log(data);
-  //   if (textarea.val() !== "") {
-  //     socketEmitter("privateMessage", data); // emitting event
-  //     textarea.val(""); //reseting textarea
-  //   }
+    // // // ---Form Start--- \\
+    const form = $("#chatForm"); // form
+    const textarea = $("#chatTextArea"); // message
+    const userId = $("#user-id"); // user id
+    // ---Form End--- \\
+    form.submit(async (e) => {
+      e.preventDefault(); // prevent form from submit
+      let data = {
+        text: textarea.val(),
+        sender: userId.val(),
+        receiver: userInfo.map((u) => { return u.id }),
+        roomId: userInfo.map((u) => { return u.room }),
+      };
 
-  //   var html = ""; // displaying your message
-  //   html += `<div class="message me">
-  //           <div class="text-main">
-  //           <div class="text-group me">
-  //           <div class="text me">
-  //           <p>${data.text}</p>
-  //           </div>
-  //           </div>
-  //           <span></span>
-  //           </div>
-  //           </div>`;
+      if (textarea.val() !== "") {
+        socketEmitter("privateMessage", data); // emitting event
+        textarea.val(""); //reseting textarea
+      }
 
-  //   document.getElementById("chatbox").innerHTML += html;
-  //   return false;
-  // });
+      return
+      var html = ""; // displaying your message
+      html += `<div class="message me">
+             <div class="text-main">
+             <div class="text-group me">
+             <div class="text me">
+             <p>${data.text}</p>
+             </div>
+             </div>
+             <span></span>
+             </div>
+             </div>`;
+
+      document.getElementById("chatbox").innerHTML += html;
+      return false;
+    });
+  })
+
+
+
+
 
   // socket.on("privateMessage", async (data) => {
   //   data.map((m) => {
