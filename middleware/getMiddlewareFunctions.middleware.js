@@ -1,3 +1,4 @@
+import { get } from "mongoose";
 import { date, formatAMPM, saveTheday } from "../config/time.js";
 import { Message } from "../model/message.model.js";
 import { Notification } from "../model/notification.model.js";
@@ -103,14 +104,12 @@ export async function getRooms(req, res, next) {
                 roomDetails.push({
                     id: a.id,
                     roomId: a.room.map((b) => { return b.roomId }),
-                    socketId: a.room.map((c) => { return c.socket }),
                     senderDetails: getUser,
                     lastMessage: a.message[a.message.length - 1],
                     allMessages: a.message,
                     messageCount: a.message.length,
                     day: saveTheday(a.createdAt),
                     friendId: a.sender,
-                    mySocket: myself.socket,
                     myId: userId,
                 })
             } else {
@@ -118,14 +117,12 @@ export async function getRooms(req, res, next) {
                 roomDetails.push({
                     id: a.id,
                     roomId: a.room.map((b) => { return b.roomId }),
-                    socketId: a.room.map((c) => { return c.socket }),
                     senderDetails: getUser,
                     lastMessage: a.message[a.message.length - 1],
                     allMessages: a.message,
                     messageCount: a.message.length,
                     day: saveTheday(a.createdAt),
                     friendId: a.receiver,
-                    mySocket: myself.socket,
                     myId: userId,
                 })
             }

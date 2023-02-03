@@ -31,11 +31,6 @@ const userSchema = new Schema({    // =========== CREATING SCHEMA FOR USER
     type: String,
     unique: true,
   },
-  socket: {
-    type: String,
-    unique: true,
-    required: true,
-  },
   friends: [{
     type: Schema.Types.ObjectId,
     ref: "User",

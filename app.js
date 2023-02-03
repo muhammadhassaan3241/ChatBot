@@ -142,7 +142,7 @@ export class SocketIOManager {
   }
 
   dataTransfer(nameSpace, data, callback) {
-    this.super_socket.emit(nameSpace, data);
+    this.super_socket.broadcast.emit(nameSpace, data);
     callback();
   }
 
@@ -153,7 +153,6 @@ export class SocketIOManager {
 
   dataListen(nameSpace, callback) {
     this.super_socket.on(nameSpace, async (data) => {
-      console.log(data);
       callback(data)
     })
   }

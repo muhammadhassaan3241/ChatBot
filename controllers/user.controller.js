@@ -1,4 +1,5 @@
 import { User } from "../model/user.model.js";
+import { Rooms } from "../model/rooms.model.js"
 import jwt from "jsonwebtoken"
 import { randomBytes } from "crypto";
 import { SocketIOManager } from "../app.js";
@@ -70,9 +71,18 @@ export async function signIn(req, res, next) {
 
     if (user && user.password === password) {
       SocketIOManager.getInstance().start(async (socket) => {
-        console.log(`${user.id} Connected`);
-        user.socket = socket.id;
-        await user.save()
+        try {
+          const newRoom = await Rooms.create({
+            room: socket.id,
+            user: user.id,
+          })
+          if (newRoom) {
+            SocketIOManager.getInstance().userJoin(newRoom.room)
+          }
+          console.log(`${user.firstName} Connected`);
+        } catch (error) {
+          console.log(error);
+        }
       })
       const token = jwt.sign(
         {

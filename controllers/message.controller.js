@@ -1,5 +1,8 @@
+import mongoose from "mongoose";
 import { SocketIOManager } from "../app.js"
+import { formatAMPM } from "../config/time.js";
 import { Message } from "../model/message.model.js"
+import { Rooms } from "../model/rooms.model.js";
 import { User } from "../model/user.model.js"
 // ======================================================================== IMPORTING MODULES AND PACKAGES
 // GET USER-ID AND ROOM FROM URL
@@ -39,46 +42,54 @@ setTimeout(() => {
                         console.log("New Room", { newRoom });
                     }
                 });
+                SocketIOManager.getInstance().dataListen("room", async (room) => {
+                    SocketIOManager.getInstance().userLeave(room);
+                    SocketIOManager.getInstance().userJoin(room);
+                    console.log(`User joined ${room}`);
+                    // CHATTING START
+                    SocketIOManager.getInstance().dataListen("privateMessage", async (data) => {
+                        const messages = await Message.findOne({ "room.roomId": data.roomId });
+                        const getRoom = await Rooms.findOne({ user: mongoose.Types.ObjectId(data.receiver_id) });
+                        // console.log(getRoom);
+                        // function sent() {
+                        //     if (socket.connected) {
+                        //         return true
+                        //     }
+                        // }
+                        // const myRoom = [];
+                        // if (getRoom) {
+                        //     getRoom.message.push({
+                        //         sender: data.sender_id,
+                        //         receiver: data.friendId,
+                        //         content: data.textMessage,
+                        //         sent: sent(),
+                        //         createdAt: formatAMPM(new Date()),
+                        //     });
+                        //     await getRoom.save();
+                        // };
+                        // getRoom.message.map(async (m) => {
+                        //     const sender = await User.findById(m.sender);
+                        //     const receiver = await User.findById(m.receiver);
+                        //     myRoom.push({
+                        //         sender: sender,
+                        //         receiver: receiver,
+                        //         content: m.content,
+                        //         time: m.createdAt,
+                        //     })
+                        // });
+                        const abc = {
+                            content: data.textMessage,
+                            time: formatAMPM(new Date())
 
-                // CHATTING START
-                // SocketIOManager.getInstance().dataListen('roomId', async (data, room = data.mySocket) => {
-                //     const getRoom = await Message.findOne({ "room.roomId": data.roomId });
-                //     const changeRoom = [];
-                //     if (getRoom) {
-                //         const friend = await User.findById(data.friendId);
-                //         changeRoom.push({
-                //             id: friend.id,
-                //             email: friend.email,
-                //             firstName: friend.firstName,
-                //             lastName: friend.lastName,
-                //             image: friend.image,
-                //             socketId: friend.socket,
-                //             mySocket: data.mySocket,
-                //             room: data.roomId,
-                //         })
-                //         console.log({ room });
-                //     }
+                        }
 
-                //     if (room === "") {
-                //         SocketIOManager.getInstance().dataTransfer('roomId', changeRoom, () => { console.log("Broadcast to all"); })
-                //     } else {
-                //         try {
-                //             SocketIOManager.getInstance().userLeave(room)
-                //             SocketIOManager.getInstance().userJoin(room)
-                //             SocketIOManager.getInstance().dataTransferToSpecificRoom('roomId', room, changeRoom, () => { console.log("Broadcast to specific user"); })
-                //         } catch (error) {
-                //             console.log(error);
-                //         }
-                //     }
-                // })
+                        SocketIOManager.getInstance().dataTransfer("privateMessage", abc, () => {
+                            console.log("Private Emitted");
+                        })
+                    })
 
-                SocketIOManager.getInstance().dataListen("privateMessage", async (data) => {
-                    const getRoom = await Message.findOne({ "room.roomId": data.roomId });
-                    const myRoom = [];
-                    if (getRoom) {
-                        console.log(getRoom);
-                    }
                 })
+
             },)
         } else {
             { "Socket is not connected" }
@@ -87,24 +98,3 @@ setTimeout(() => {
 }, 1000);
 
 // =============================================================== STOP
-
-
-
-// const getRoom = await Message.findOne({
-            //     $or:
-            //         [
-            //             { "room": { $elemMatch: { "users": { $elemMatch: { "user1": data.senderId } } } } },
-            //             { "room": { $elemMatch: { "users": { $elemMatch: { "user2": data.senderId } } } } }
-            //         ]
-            // });
-
-            // console.log(getRoom);
-
-            // if (getRoom) {
-            //     getRoom.message.push({
-            //         sender: data.senderId,
-            //         receiver: data.selectedUserId,
-            //         content: data.text,
-            //     })
-            //     await getRoom.save();
-            // }

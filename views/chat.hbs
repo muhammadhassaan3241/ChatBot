@@ -181,16 +181,15 @@
                                     <div class="bottom">
                                         {{#user}}
                                         <form id="chatForm" class="position-relative w-100">
-                                            <textarea type="text" class="form-control"
-                                                placeholder="Start typing for reply..." rows="1"
-                                                id="chatTextArea"></textarea>
+                                            <textarea class="form-control" id="textMessage"
+                                                placeholder="Start typing for reply..." rows="1"></textarea>
 
-                                            <input id="user-id" value="{{id}}" name="user" hidden />
-                                            <input id="user-fullname" value="{{firstName}} {{lastName}}" hidden />
+                                            <input id="sender_id" value="{{id}}" hidden />
+                                            <input id="sender_fullname" value="{{firstName}} {{lastName}}" hidden />
 
                                             <button class="btn emoticons"><i
                                                     class="material-icons">insert_emoticon</i></button>
-                                            <button type="submit" class="btn send"><i
+                                            <button type="submit" id="messageSubmitButton" class="btn send"><i
                                                     class="material-icons">send</i></button>
                                         </form>
                                         {{/user}}
