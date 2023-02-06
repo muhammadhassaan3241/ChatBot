@@ -1,7 +1,8 @@
 {{#discussions}}
-<div class="list-group" role="tablist" style="cursor: pointer;">
+<div class="list-group changeChatView" role="tablist" style="cursor: pointer;"
+    aria-valuetext="{{json messages}},{{myId}})">
     <a class="filterDiscussions all single active chatRoomId" id="chatRoomId" data-toggle="list" role="tab"
-        aria-valuetext="{{roomId}},{{friendId}},{{myId}}">
+        aria-valuetext="{{roomId}},{{friendId}},{{myId}},{{json allMessages}},{{socket}}">
         {{#senderDetails}}
         <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" alt="avatar">
         {{/senderDetails}}
@@ -13,12 +14,10 @@
         </div>
         <div class="data">
             {{#senderDetails}}
-            <h5>{{firstName}}</h5>
+            <h5>{{firstName}} {{lastName}}</h5>
             {{/senderDetails}}
             <span>{{day}}</span>
-            {{#lastMessage}}
-            <p>{{content}}</p>
-            {{/lastMessage}}
+            <p class="discussionMessage">{{lastMessage}}</p>
         </div>
     </a>
 </div>

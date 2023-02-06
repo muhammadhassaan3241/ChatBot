@@ -34,7 +34,10 @@ const userSchema = new Schema({    // =========== CREATING SCHEMA FOR USER
   friends: [{
     type: Schema.Types.ObjectId,
     ref: "User",
-  }]
+  }],
+  socket:{
+    type:String
+  }
 });
 // ===================================== STOP
 

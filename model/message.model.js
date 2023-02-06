@@ -11,10 +11,6 @@ const messageSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAG
             required: true,
             unique: true,
         },
-        socket: {
-            type: String,
-            required: true,
-        },
         users: [{
             type: Schema.Types.Mixed,
             ref: "User"
@@ -53,7 +49,7 @@ const messageSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAG
             default: false,
         },
         createdAt: {
-            type: Date,
+            type: String,
             default: Date.now()
         }
     }],

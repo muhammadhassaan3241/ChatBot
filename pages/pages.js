@@ -26,7 +26,7 @@ pagesRoutes.get("/chat", Token, getNotifications, getFriends, getContacts, getRo
   const userId = req.user.id;
   const users = await User.find();
   const user = await User.findById(userId);
-
+  
 
   res.render("chat", {
     title: "ChatIO",

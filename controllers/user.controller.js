@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken"
 import { randomBytes } from "crypto";
 import { SocketIOManager } from "../app.js";
 import Cookies from "js-cookie";
-
 // ========================================== IMPORT MODULES AND PACKAGES
 
 
@@ -70,25 +69,16 @@ export async function signIn(req, res, next) {
     }
 
     if (user && user.password === password) {
-      SocketIOManager.getInstance().start(async (socket) => {
-        try {
-          const newRoom = await Rooms.create({
-            room: socket.id,
-            user: user.id,
-          })
-          if (newRoom) {
-            SocketIOManager.getInstance().userJoin(newRoom.room)
-          }
-          console.log(`${user.firstName} Connected`);
-        } catch (error) {
-          console.log(error);
-        }
+      SocketIOManager.getInstance().start(()=>{
+        SocketIOManager.getInstance().userConnection(user.firstName,async(socket)=>{
+          user.socket = socket.id;
+          await user.save();
+        })
       })
       const token = jwt.sign(
         {
           id: user.id,
           email: user.email,
-          token: user.token,
         },
         process.env.SECRET_KEY,
         {

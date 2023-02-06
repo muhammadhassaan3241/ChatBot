@@ -24,27 +24,31 @@ $(document).ready(function () {
     e.preventDefault();
     let user1 = user2_Id.val();
     let user2 = selectedUser.val();
-    let users = {
-      myself: user1,
-      friend: user2,
-    }
-    console.log(users);
+    console.log(user1, user2);
     startNewChatButton.click(function () {
-      if (user2 === "") {
-        alert('Please select a friend to talk')
-        return false;
-      } else {
-        socket.emit('startNewChat', users)
-        alert('new chat has been created')
-        return false;
-      }
+      $.ajax({
+        url: `http://localhost:8080/start-new-chat?mySelf=${user1}&friend=${user2}`,
+        type: "GET",
+        success: function (response) {
+          console.log("The request was successful!");
+          alert('new chat created')
+          return false
+        },
+        error: function (error) {
+          console.log("There was an error with the request.");
+          console.log(error);
+        }
+      })
+      alert('new chat has been created')
+      return false;
     })
   })
+
+
 
   $('.chatRoomId').click(function () {
     const data = $(this).attr('aria-valuetext');
     const split = data.split(",");
-
     var roomId = split[0];
     var friendId = split[1];
     var myId = split[2];
@@ -55,10 +59,12 @@ $(document).ready(function () {
       success: function (response) {
         console.log("The request was successful!");
         const friendData = response.roomDetails;
-        var html = "";
+        var html1 = "";
+        var html2 = "";
         friendData.map((a) => {
           const friend = a.friend;
-          html += ` <div class="col-md-12">
+          const messages = a.messages;
+          html1 += ` <div class="col-md-12">
             <div class="inside">
                 <a href="#"><img class="avatar-md" src="${friend.image}" data-toggle="tooltip"
                         data-placement="top" alt="avatar"></a>
@@ -92,8 +98,38 @@ $(document).ready(function () {
                 </div>
             </div>
         </div>`
+
+          messages.map((m) => {
+            if (myId === m.sender) {
+              html2 += `<div class="message me">
+             <div class="text-main">
+             <div class="text-group me">
+             <div class="text me">
+             <p>${m.content}</p>
+             </div>
+             </div>
+             <span>${m.createdAt}</span>
+             </div>
+             </div>`
+            } else {
+              html2 += `<div class="message">         
+                  <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
+                    data-placement="top" title="Keith" alt="avatar" />
+                  <div class="text-main">
+                    <div class="text-group">
+                      <div class="text">
+                        <p>${m.content}</p>
+                      </div>
+                    </div>
+                    <span>${m.createdAt}</span>
+                  </div>
+                </div>`
+            }
+          })
+
         })
-        document.getElementById("chatTopBar").innerHTML = html;
+        document.getElementById("chatbox").innerHTML += html2;
+        document.getElementById("chatTopBar").innerHTML = html1;
       },
       error: function (error) {
         console.log("There was an error with the request.");
@@ -110,80 +146,74 @@ $(document).ready(function () {
 
     chatForm.unbind("submit").bind("submit", function (event) {
       event.preventDefault();
+      function formatAMPM(date) {
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        hours %= 12;
+        hours = hours || 12;
+        minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+        return `${hours}:${minutes} ${ampm}`;
+      }
       const roomDetails = {
         roomId: room,
         sender_fullname: sender_fullname.val(),
         textMessage: textMessage.val(),
         sender_id: sender_id.val(),
         receiver_id: receiver_id,
+        createdAt: formatAMPM(new Date()),
       }
       if (textMessage.val() !== "") {
         socket.emit("privateMessage", roomDetails);
+        textMessage.val("");
+        var html = '';
+        html += `<div class="message me">
+        <div class="text-main">
+        <div class="text-group me">
+        <div class="text me">
+        <p>${roomDetails.textMessage}</p>
+        </div>
+        </div>
+        <span>${roomDetails.createdAt}</span>
+        </div>
+        </div> `;
       }
-      textMessage.val("");
-      return false;
+
+      $(".discussionMessage").html(`<p class="discussionMessage">You: ${roomDetails.textMessage.substring(0, 20).concat("...")}</p>`)
+
+      document.getElementById("chatbox").innerHTML += html;
     })
+    return false;
   });
 
 
   socket.on("privateMessage", (data) => {
-    var html = "";
+    console.log(data);
+    // toastr.info("one new message", "Notification")
+
+    var html1 = "";
+    const message = data[data.length - 1];
+
+    html1 += `<div class="message">         
+            <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
+              data-placement="top" title="Keith" alt="avatar" />
+            <div class="text-main">
+              <div class="text-group">
+                <div class="text">
+                  <p>${message.content}</p>
+                </div>
+              </div>
+              <span>${message.createdAt}</span>
+            </div>
+          </div>`;
+    document.getElementById("chatbox").innerHTML += html1;
+
+    $('.discussionMessage').html(`<p class="discussionMessage">${message.content.substring(0, 20).concat("...")}</p>`)
 
   })
 
-  // socket.on("privateMessage", async (data) => {
-  //   data.map((m) => {
-  //     html += `<div class="message">         
-  //          <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
-  //            data-placement="top" title="Keith" alt="avatar" />
-  //          <div class="text-main">
-  //            <div class="text-group">
-  //              <div class="text">
-  //                <p>${m.content}</p>
-  //              </div>
-  //            </div>
-  //            <span>${m.time}</span>
-  //          </div>
-  //        </div>`;
-
-  //     document.getElementById("chatbox").innerHTML += html;
-  //   });
-  // });
-
-  // function changeChatView(messages, myID) {
-  //   var messagess = messages;
-  //   html = "";
-
-  //   messagess.map((msg) => {
-  //     console.log(msg);
-  //     if (myID === msg.sender) {
-  //       html += `<div class="message me">
-  //     <div class="text-main">
-  //     <div class="text-group me">
-  //     <div class="text me">
-  //     <p>${msg}</p>
-  //     </div>
-  //     </div>
-  //     <span>${time}</span>
-  //     </div>
-  //     </div>`;
-  //     } else {
-  //       html += `<div class="message">         
-  //          <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
-  //            data-placement="top" title="Keith" alt="avatar" />
-  //          <div class="text-main">
-  //            <div class="text-group">
-  //              <div class="text">
-  //                <p>${msg.content}</p>
-  //              </div>
-  //            </div>
-  //            <span>${msg.createdAt}</span>
-  //          </div>
-  //        </div>`;
-  //     }
-  //   });
-  //   document.getElementById("chatbox").innerHTML = html;
-  // }
 
   // =============================================================================================
   // =============================================================================================

@@ -99,18 +99,27 @@ export async function getRooms(req, res, next) {
         const roomDetails = [];
         const myself = await User.findById(userId);
         getRoom.map(async (a) => {
+            function lastMessage() {
+                const lastMessage = a.message[a.message.length - 1];
+                if (JSON.stringify(lastMessage.sender) === JSON.stringify(userId)) {
+                    return "You: " + lastMessage.content.substring(0, 20).concat("...")
+                } else {
+                    return `${lastMessage.content.substring(0, 20).concat("...")}`
+                }
+            }
             if (JSON.stringify(a.sender) !== JSON.stringify(userId)) {
                 const getUser = await User.findById(a.sender);
                 roomDetails.push({
                     id: a.id,
                     roomId: a.room.map((b) => { return b.roomId }),
                     senderDetails: getUser,
-                    lastMessage: a.message[a.message.length - 1],
+                    lastMessage: lastMessage(),
                     allMessages: a.message,
                     messageCount: a.message.length,
                     day: saveTheday(a.createdAt),
                     friendId: a.sender,
                     myId: userId,
+                    socket: getUser.socket,
                 })
             } else {
                 const getUser = await User.findById(a.receiver);
@@ -118,12 +127,13 @@ export async function getRooms(req, res, next) {
                     id: a.id,
                     roomId: a.room.map((b) => { return b.roomId }),
                     senderDetails: getUser,
-                    lastMessage: a.message[a.message.length - 1],
+                    lastMessage: lastMessage(),
                     allMessages: a.message,
                     messageCount: a.message.length,
                     day: saveTheday(a.createdAt),
                     friendId: a.receiver,
                     myId: userId,
+                    socket: getUser.socket,
                 })
             }
         })

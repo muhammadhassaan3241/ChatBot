@@ -127,8 +127,11 @@ export class SocketIOManager {
     });
   }
 
-  userConnection(user) {
-    console.log(`${user} Connected`);
+  userConnection(user, callback) {
+    this.super_socket.on('user-connect', () => {
+      console.log(`${user} Connected`);
+    })
+    callback(this.super_socket)
   }
 
   userJoin(presentRoom) {
@@ -186,6 +189,7 @@ export class SocketIOManager {
 import "./controllers/friendRequest.controller.js"
 import "./controllers/message.controller.js"
 import accountRoutes from "./routes/account.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
 import roomRoutes from "./routes/room.routes.js";
 import userRoutes from "./routes/user.routes.js"
 import pagesRoutes from "./pages/pages.js"
@@ -193,6 +197,7 @@ app.use('/', accountRoutes);
 app.use('/', pagesRoutes);
 app.use('/', roomRoutes);
 app.use('/', userRoutes);
+app.use('/', chatRoutes)
 // =========================================================================================== STOP
 
 

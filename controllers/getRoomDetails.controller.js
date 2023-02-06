@@ -1,3 +1,4 @@
+import { Message } from "../model/message.model.js";
 import { User } from "../model/user.model.js"
 
 export async function getRoomDetails(req, res, next) {
@@ -7,10 +8,13 @@ export async function getRoomDetails(req, res, next) {
         const friendId = req.query.friendId;
         const myId = req.query.myId;
         const friend = await User.findById(friendId);
+        const messages = await Message.findOne({ "room.roomId": roomId });
+        const textMessages = messages.message;
         roomDetails.push({
             friend: friend,
             roomId: roomId,
             myId: myId,
+            messages: textMessages,
         })
         res.send({ roomDetails: roomDetails })
     } catch (error) {
