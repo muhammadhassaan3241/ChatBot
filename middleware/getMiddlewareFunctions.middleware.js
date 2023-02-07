@@ -100,11 +100,15 @@ export async function getRooms(req, res, next) {
         const myself = await User.findById(userId);
         getRoom.map(async (a) => {
             function lastMessage() {
-                const lastMessage = a.message[a.message.length - 1];
-                if (JSON.stringify(lastMessage.sender) === JSON.stringify(userId)) {
-                    return "You: " + lastMessage.content.substring(0, 20).concat("...")
-                } else {
-                    return `${lastMessage.content.substring(0, 20).concat("...")}`
+                try {
+                    const lastMessage = a.message[a.message.length - 1];
+                    if (JSON.stringify(lastMessage.sender) === JSON.stringify(userId)) {
+                        return "You: " + lastMessage.content.substring(0, 20).concat("...")
+                    } else {
+                        return `${lastMessage.content.substring(0, 20).concat("...")}`
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
             }
             if (JSON.stringify(a.sender) !== JSON.stringify(userId)) {

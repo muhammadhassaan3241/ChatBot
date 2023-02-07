@@ -6,12 +6,12 @@
         {{#senderDetails}}
         <img class="avatar-md" src="{{image}}" data-toggle="tooltip" data-placement="top" alt="avatar">
         {{/senderDetails}}
-        <div class="status">
+        {{!-- <div class="status">
             <i class="material-icons offline">fiber_manual_record</i>
         </div>
         <div class="new bg-green">
             <span>{{messageCount}}</span>
-        </div>
+        </div> --}}
         <div class="data">
             {{#senderDetails}}
             <h5>{{firstName}} {{lastName}}</h5>
@@ -22,5 +22,3 @@
     </a>
 </div>
 {{/discussions}}
-
-{{!-- '{{roomId}}','{{friendId}}','{{json messages}}','{{json senderDetails}}',{{messageCount}} --}}

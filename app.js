@@ -134,27 +134,27 @@ export class SocketIOManager {
     callback(this.super_socket)
   }
 
-  userJoin(presentRoom) {
+  roomJoin(presentRoom) {
     this.super_socket.join(presentRoom)
     console.log(this.super_socket.rooms);
   }
 
-  userLeave(presentRoom) {
+  roomLeave(presentRoom) {
     this.super_socket.leave(presentRoom)
     console.log(this.super_socket.rooms);
   }
 
-  dataTransfer(nameSpace, data, callback) {
+  socketEmit(nameSpace, data, callback) {
     this.super_socket.broadcast.emit(nameSpace, data);
     callback();
   }
 
-  dataTransferToSpecificRoom(nameSpace, room, data, callback) {
-    this.super_socket.to(room).emit(nameSpace, data)
+  socketEmitToSpecificRoom(nameSpace, room, data, callback) {
+    this.super_socket.broadcast.to(room).emit(nameSpace, data)
     callback()
   }
 
-  dataListen(nameSpace, callback) {
+  socketOn(nameSpace, callback) {
     this.super_socket.on(nameSpace, async (data) => {
       callback(data)
     })
@@ -186,7 +186,6 @@ export class SocketIOManager {
 
 // MODULES
 // =========================================================================================== START
-import "./controllers/friendRequest.controller.js"
 import "./controllers/message.controller.js"
 import accountRoutes from "./routes/account.routes.js";
 import chatRoutes from "./routes/chat.routes.js";

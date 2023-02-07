@@ -57,24 +57,16 @@ export async function signUp(req, res, next) {
 // =============================================================== SIGNING UP USER
 export async function signIn(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const email = req.query.email;
+    const password = req.query.password;
     const user = await User.findOne({ email: email });
-
     if (!user) {
-      res.json({ success: false, msg: "no user with that email" });
+      res.redirect("/chat")
     }
-
     if (user.password !== password || user.email !== email) {
-      res.json({ success: false, msg: "incorrect email or password" });
+      res.redirect("/chat")
     }
-
     if (user && user.password === password) {
-      SocketIOManager.getInstance().start(()=>{
-        SocketIOManager.getInstance().userConnection(user.firstName,async(socket)=>{
-          user.socket = socket.id;
-          await user.save();
-        })
-      })
       const token = jwt.sign(
         {
           id: user.id,
@@ -93,7 +85,7 @@ export async function signIn(req, res, next) {
       user.token = token;
       res
         .header("user_info", token)
-        .redirect('/chat');
+        .send({ userDetails: user });
 
     }
   } catch (e) {
@@ -105,15 +97,10 @@ export async function signOut(req, res, next) {
 
   const id = req.user.id;
   const user = await User.findById(id);
-  if (user) {
-    SocketIOManager.getInstance().stop((socket) => {
-      console.log(`${user.id} Disconnected`);
-      Cookies.remove('connect.sid');
-      Cookies.remove('user_info');
-      res.redirect('/');
-    })
+  Cookies.remove('connect.sid');
+  Cookies.remove('user_info');
+  res.redirect('/');
 
-  }
 }
 // =============================================================== SIGNING OUT USER
 export async function forgotPassword(req, res, next) {

@@ -5,6 +5,7 @@ export async function startNewChat(req, res, next) {
     try {
         const me = req.query.mySelf;
         const friend = req.query.friend;
+
         const user1 = await User.findById(me);
         const user2 = await User.findById(friend);
 
@@ -29,7 +30,7 @@ export async function startNewChat(req, res, next) {
                 sender: user1,
                 receiver: user2,
             });
-            console.log("New Room", { newRoom });
+            res.send({ newRoom: newRoom });
         }
 
 

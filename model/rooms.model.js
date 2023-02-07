@@ -9,9 +9,9 @@ const roomSchema = new Schema({     // =========== CREATING SCHEMA FOR MESSAGING
         type: String,
         unique: true
     },
-    user: {
+    messages: {
         type: Schema.Types.Mixed,
-        ref: "User"
+        ref: "Message"
     }
 }, {
     timestamps: true,

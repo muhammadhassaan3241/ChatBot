@@ -6,19 +6,53 @@ $(document).ready(function () {
     console.log("Socket Connected");
   });
 
-
   // import SocketIOManager from "../../app";
   function socketEmitter(nameSpace, data) {
     //event emitter function
     socket.emit(nameSpace, data);
   }
 
+  // =============================================================================================
+  // =============================================================================================
+  // =============================================================================================
+  // =============================================================================================
 
+  // LOGIN SETTINGS
+
+  const loginForm = $("#loginForm");
+  const inputEmail = $("#inputEmail");
+  const inputPassword = $("#inputPassword");
+  loginForm.on("submit", function (e) {
+    e.preventDefault();
+    let formData = {
+      email: inputEmail.val(),
+      password: inputPassword.val(),
+    }
+    $.ajax({
+      url: `http://localhost:8080/sign-in?email=${formData.email}&password=${formData.password}`,
+      type: "POST",
+      success: function (response) {
+        console.log("The request was successful!");
+        window.location.href = "http://localhost:8080/chat";
+        return false
+      },
+      error: function (error) {
+        console.log("There was an error with the request.");
+        console.log(error);
+      }
+    })
+  })
+
+  // =============================================================================================
+  // =============================================================================================
+  // =============================================================================================
+  // =============================================================================================
+
+  // ROOM SETTINGS
   const selectedUser = $("#selectedUser");
   const user2_Id = $("#user2_Id");
   const newChatForm = $("#startNewChatForm");
   const startNewChatButton = $("#newChatButton");
-
 
   newChatForm.submit(async (e) => {
     e.preventDefault();
@@ -31,15 +65,14 @@ $(document).ready(function () {
         type: "GET",
         success: function (response) {
           console.log("The request was successful!");
-          alert('new chat created')
-          return false
+          socket.emit('create-room', response.newRoom, user1)
+          window.location.href = "http://localhost:8080/chat";
         },
         error: function (error) {
           console.log("There was an error with the request.");
           console.log(error);
         }
       })
-      alert('new chat has been created')
       return false;
     })
   })
@@ -52,29 +85,35 @@ $(document).ready(function () {
     var roomId = split[0];
     var friendId = split[1];
     var myId = split[2];
-    socket.emit("room", roomId)
+
+    let roomData = {
+      me: myId,
+      room: roomId,
+    }
     $.ajax({
       url: `http://localhost:8080/get-room-details?roomId=${roomId}&friendId=${friendId}&myId=${myId}`,
       type: 'GET',
       success: function (response) {
         console.log("The request was successful!");
+        socket.emit("join_room", roomData)
         const friendData = response.roomDetails;
         var html1 = "";
         var html2 = "";
         friendData.map((a) => {
           const friend = a.friend;
           const messages = a.messages;
-          html1 += ` <div class="col-md-12">
-            <div class="inside">
+          socket.emit("join-room", room)
+          html1 += ` <div style="color:mediumseagreen;" class="col-md-12">
+            <div  class="inside">
                 <a href="#"><img class="avatar-md" src="${friend.image}" data-toggle="tooltip"
-                        data-placement="top" alt="avatar"></a>
+                        data-placement="top"></a>
                 <div class="status">
                     <i class="material-icons online">fiber_manual_record</i>
                 </div>
                 <div class="data">
                     <h5><a href="#">${friend.firstName} ${friend.lastName}</a></h5>
                     
-                    <span>Active now</span>
+                    <span class="userStatus"><b>offline</b></span>
 
                 </div>
                 <button class="btn connect d-md-block d-none" name="1"><i
@@ -108,16 +147,16 @@ $(document).ready(function () {
              <p>${m.content}</p>
              </div>
              </div>
-             <span>${m.createdAt}</span>
+             <span style="color:#000;">${m.createdAt}</span>
              </div>
              </div>`
             } else {
-              html2 += `<div class="message">         
+              html2 += `<div style="color:#000;" class="message">         
                   <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
                     data-placement="top" title="Keith" alt="avatar" />
                   <div class="text-main">
                     <div class="text-group">
-                      <div class="text">
+                      <div style="background-color:#66FF99;" class="text">
                         <p>${m.content}</p>
                       </div>
                     </div>
@@ -168,6 +207,9 @@ $(document).ready(function () {
       if (textMessage.val() !== "") {
         socket.emit("privateMessage", roomDetails);
         textMessage.val("");
+        textMessage.focus();
+        $("#chatbox").scrollTop = $("#chatbox").scrollHeight;
+
         var html = '';
         html += `<div class="message me">
         <div class="text-main">
@@ -189,19 +231,55 @@ $(document).ready(function () {
   });
 
 
+  $("#textMessage").on("keypress", function () {
+    socket.emit('message_typing', "...")
+  });
+  $("#textMessage").on("keyup", function () {
+    socket.emit('message_typing_stops', "")
+  })
+  socket.on("message_typing", (data) => {
+    var html = "";
+    html = `<div style="color:#000;" class="message typingMessage">
+    <img class="avatar-md" src="dist/img/avatars/avatar-female-5.jpg" data-toggle="tooltip" data-placement="top"
+        title="Keith" alt="avatar">
+    <div class="text-main">
+        <div class="text-group">
+            <div style = "background-color:#66FF99;" class="text typing">
+                <div class="wave">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`
+
+    document.getElementById("chatbox").innerHTML = html;
+  })
+  socket.on("message_typing_stops", (data) => {
+    $(".typingMessage").fadeOut(1000, function () { return })
+  })
+  // =============================================================================================
+  // =============================================================================================
+  // =============================================================================================
+  // =============================================================================================
+
+  // MESSAGE SETTINGS
   socket.on("privateMessage", (data) => {
     console.log(data);
-    // toastr.info("one new message", "Notification")
+    toastr.info("one new message", "Notification")
 
     var html1 = "";
     const message = data[data.length - 1];
 
-    html1 += `<div class="message">         
+    html1 += `<div style="color:#000;" 
+              class="message">         
             <img class="avatar-md" src="/img/avatars/avatar-female-5.jpg" data-toggle="tooltip"
               data-placement="top" title="Keith" alt="avatar" />
             <div class="text-main">
               <div class="text-group">
-                <div class="text">
+                <div style = "background-color:#66FF99;"  class="text">
                   <p>${message.content}</p>
                 </div>
               </div>
@@ -211,7 +289,6 @@ $(document).ready(function () {
     document.getElementById("chatbox").innerHTML += html1;
 
     $('.discussionMessage').html(`<p class="discussionMessage">${message.content.substring(0, 20).concat("...")}</p>`)
-
   })
 
 
@@ -283,14 +360,15 @@ $(document).ready(function () {
   socket.on('requestAccepted', (data) => {
     console.log(data);
   })
+
+  socket.on("join_room", (data) => {
+    $(".userStatus").html(` <span id="Status"><b>online</b></span>`)
+  })
+
+
+
+
 })
 
 
-
-// const selectedUserChatRoom = $("#selectedUserChatRoom");
-// const selectedRoom = $("#selectedRoom");
-
-// selectedRoom.on("click", function () {
-//   selectedUserChatRoom.show()
-// })
 
