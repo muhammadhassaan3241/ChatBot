@@ -6,27 +6,32 @@
                 <button type="button" class="btn" data-dismiss="modal" aria-label="Close"><i
                         class="material-icons">close</i></button>
             </div>
-            <div class="content">
-
+            <div class="content layer">
                 <form id="startNewChatForm">
-                    <div class="form-group">
-                        <label for="participant">Recipient:</label>
-                        <select class="form-control" required>
-                            <option value="" class="form-control" selected>Select Recipient</option>
+                    <label for="participant" style="color: black;font-size:larger;"><b>Recipient:</b></label>
+                    <div style="color:#bdbac2;" class="language">
+                        <select class="custom-select" id="country" required>
+                            <option selected>Select Recipient</option>
                             {{#friends}}
-                            <option id="selectedUser" value="{{id}}" class="form-control">
-                                <h1>{{name}}</h1>
+                            <option id="selectedUser" value="{{id}}">
+                                {{name}}
                             </option>
                             {{/friends}}
                         </select>
-                        {{#user}}
-                        <input id="user2_Id" value="{{id}}" hidden>
-                        {{/user}}
                     </div>
+                    {{#user}}
+                    <input id="user2_Id" value="{{id}}" hidden>
+                    {{/user}}
+                    <br>
                     <button id="newChatButton" class="btn button w-100">Start New Chat</button>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
+
+
+{{!-- <select class="custom-select" id="country" required>
+    <option value="">Select Recipient</option>
+
+</select> --}}
